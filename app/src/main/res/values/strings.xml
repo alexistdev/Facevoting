@@ -1,3 +1,13 @@
 <resources>
+    <!--  Aplikasi  -->
     <string name="app_name">FaceVoting</string>
+    <string name="logo_app">Logo FaceVoting</string>
+    <!--  SplashActivity  -->
+    <string name="splash1">START</string>
+    <!--  PreLogin1  -->
+    <string name="pre1">FaceVoting</string>
+    <string name="pre2">Gambar Prelogin</string>
+    <string name="pre3">Pilih Kandidatmu !</string>
+    <string name="pre4">Aplikasi Evoting untuk melakukan pemilihan atau voting secara daring !</string>
+    <string name="pre5">Tombol Mulai Sekarang</string>
 </resources>
