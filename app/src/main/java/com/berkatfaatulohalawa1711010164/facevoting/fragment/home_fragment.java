@@ -1,66 +1,120 @@
 package com.berkatfaatulohalawa1711010164.facevoting.fragment;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.berkatfaatulohalawa1711010164.facevoting.API.APIService;
+import com.berkatfaatulohalawa1711010164.facevoting.API.NoConnectivityException;
 import com.berkatfaatulohalawa1711010164.facevoting.R;
+import com.berkatfaatulohalawa1711010164.facevoting.adapter.MenuAdapter;
+import com.berkatfaatulohalawa1711010164.facevoting.model.MenuModel;
+import com.berkatfaatulohalawa1711010164.facevoting.response.GetMenu;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link home_fragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
+
+
 public class home_fragment extends Fragment {
+    private RecyclerView gridMenu;
+    private MenuAdapter menuAdapter;
+    private List<MenuModel> daftarMenu;
+    private ProgressDialog progressDialog;
+    private Context mContext;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public home_fragment() {
-        // Required empty public constructor
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View mview = inflater.inflate(R.layout.fragment_home, container, false);
+        dataInit(mview);
+        setupRecyclerView();
+        refresh(getContext());
+        return mview;
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment home_fragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static home_fragment newInstance(String param1, String param2) {
-        home_fragment fragment = new home_fragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    private void dataInit(View mview){
+        progressDialog = ProgressDialog.show(getActivity(), "", "Loading.....", true, false);
+        gridMenu = mview.findViewById(R.id.rcMenu);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public void onResume() {
+        super.onResume();
+        setupRecyclerView();
+        refresh(getContext());
+        menuAdapter.notifyDataSetChanged();
+    }
+
+    public void refresh(Context mContext) {
+        try {
+            Call<GetMenu> call = APIService.Factory.create(mContext).listMenu();
+            call.enqueue(new Callback<GetMenu>() {
+                @Override
+                public void onResponse(Call<GetMenu> call, Response<GetMenu> response) {
+                    if(response.isSuccessful()){
+                        try {
+                            if(response.body() != null){
+                                if(response.body().getStatus().equals("failed")){
+                                    progressDialog.dismiss();
+                                } else {
+                                    progressDialog.dismiss();
+                                    daftarMenu = response.body().getListMenu();
+                                    menuAdapter.replaceData(daftarMenu);
+                                }
+                            }
+                        } catch (Exception e){
+                            progressDialog.dismiss();
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GetMenu> call, Throwable t) {
+                    progressDialog.dismiss();
+                    if(t instanceof NoConnectivityException) {
+                        displayExceptionMessage("Offline, cek koneksi internet anda!");
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            displayExceptionMessage(e.getMessage());
+        }
+    }
+    private void setupRecyclerView() {
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext()){
+//            @Override
+//            public RecyclerView.LayoutParams generateDefaultLayoutParams() {
+//                return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//            }
+//        };
+
+        if(this.getContext() != null){
+            menuAdapter = new MenuAdapter(getContext(),new ArrayList<MenuModel>());
+            gridMenu.setHasFixedSize(true);
+            gridMenu.setLayoutManager(new GridLayoutManager(getContext(),2));
+            gridMenu.setAdapter(menuAdapter);
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+    private void displayExceptionMessage(String msg)
+    {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
     }
 }
