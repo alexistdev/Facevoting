@@ -4,11 +4,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.home_fragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
+        <LinearLayout
+            android:background="@drawable/header_bg"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+            <ImageView
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:contentDescription="@string/logo_app"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/logosmall"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/dashboard1"
+                    android:textAlignment="textEnd"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/dashboard2"
+                    android:textAlignment="textEnd"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/dashboard3"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
 </FrameLayout>

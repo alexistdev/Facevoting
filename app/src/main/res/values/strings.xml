@@ -35,6 +35,11 @@
     <string name="checkp4">MOHON MENUNGGU VERIFIKASI AKUN ANDA</string>
     <string name="checkp5">UNTUK MELAKUKAN PENCOBLOSAN</string>
     <string name="checkp6">Tombol Lanjutkan</string>
+    <!--  Dashboard  -->
+    <string name="dashboard1">Selamat Datang di FaceVoting</string>
+    <string name="dashboard2">George Cloney</string>
+    <string name="dashboard3">ID123456879</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
