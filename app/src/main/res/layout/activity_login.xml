@@ -61,6 +61,7 @@
 
 
         <ImageView
+            android:id="@+id/btn_login"
             android:layout_width="85dp"
             android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"

@@ -8,4 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="darkGrey">#838282</color>
+    <color name="bgUtama">#825efe</color>
+    <color name="merahMaroon">#651E19</color>
+    <color name="merah">#D32316</color>
 </resources>

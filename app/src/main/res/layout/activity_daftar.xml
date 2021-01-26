@@ -90,6 +90,7 @@
             android:layout_height="wrap_content"/>
 
         <ImageView
+            android:id="@+id/tombol_daftar"
             android:layout_width="75dp"
             android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"

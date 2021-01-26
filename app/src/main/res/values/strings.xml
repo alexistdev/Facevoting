@@ -1,6 +1,6 @@
 <resources>
     <!--  Aplikasi  -->
-    <string name="app_name">FaceVoting</string>
+    <string name="app_name">FaceVoting V.1.0</string>
     <string name="logo_app">Logo FaceVoting</string>
     <!--  SplashActivity  -->
     <string name="splash1">START</string>
@@ -23,4 +23,18 @@
     <string name="daftar3">Pilih Pemilu</string>
     <string name="daftar4">Anda sudah memiliki Akun ? <b>Login</b></string>
     <string name="daftar5">BUAT AKUN</string>
+    <!--  Bottom Menu  -->
+    <string name="btmenu1">Home</string>
+    <string name="btmenu2">Vote</string>
+    <string name="btmenu3">Hasil</string>
+    <string name="btmenu4">Akun</string>
+    <!--  Checkpoint  -->
+    <string name="checkp1">TERIMAKASIH TELAH MENDAFTAR</string>
+    <string name="checkp2">Gambar Berhasil</string>
+    <string name="checkp3">DATA ANDA SEDANG DIPROSES</string>
+    <string name="checkp4">MOHON MENUNGGU VERIFIKASI AKUN ANDA</string>
+    <string name="checkp5">UNTUK MELAKUKAN PENCOBLOSAN</string>
+    <string name="checkp6">Tombol Lanjutkan</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

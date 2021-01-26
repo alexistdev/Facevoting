@@ -9,7 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FaceVoting">
-        <activity android:name=".ui.Daftar"></activity>
+        <activity android:name=".ui.Checkpoint"
+            android:theme="@style/ThemeNoActionBar"
+            />
+        <activity android:name=".ui.Daftar"
+            android:theme="@style/ThemeNoActionBar"
+            />
         <activity
             android:name=".ui.Login"
             android:theme="@style/ThemeNoActionBar" />
