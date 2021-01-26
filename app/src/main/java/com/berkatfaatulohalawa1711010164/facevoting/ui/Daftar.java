@@ -9,18 +9,18 @@ import android.widget.TextView;
 
 import com.berkatfaatulohalawa1711010164.facevoting.R;
 
-public class Login extends AppCompatActivity {
-    private TextView btnDaftar;
+public class Daftar extends AppCompatActivity {
+    private TextView btnLogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_daftar);
 
-        btnDaftar = findViewById(R.id.tbl_daftar);
-        btnDaftar.setOnClickListener(new View.OnClickListener() {
+        btnLogin = findViewById(R.id.tbl_login);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Login.this, Daftar.class);
+                Intent intent = new Intent(Daftar.this, Login.class);
                 startActivity(intent);
             }
         });

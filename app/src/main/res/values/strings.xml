@@ -15,5 +15,12 @@
     <string name="login2">Gambar tombol login</string>
     <string name="login3">Password</string>
     <string name="login4">Gambar logo login</string>
-    <string name="login5">Anda belum memiliki Akun ? Daftar</string>
+    <string name="login5">Anda belum memiliki Akun ? <b>Daftar</b></string>
+    <string name="login6">LOGIN</string>
+    <!--  Daftar  -->
+    <string name="daftar1">Nama Lengkap</string>
+    <string name="daftar2">NIK/KTP/SIM/PASPPORT</string>
+    <string name="daftar3">Pilih Pemilu</string>
+    <string name="daftar4">Anda sudah memiliki Akun ? <b>Login</b></string>
+    <string name="daftar5">BUAT AKUN</string>
 </resources>

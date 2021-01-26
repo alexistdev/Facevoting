@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/login_bg"
-    tools:context=".ui.Login">
+    tools:context=".ui.Daftar">
     <ImageView
         android:layout_width="100dp"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/login4"
         android:src="@drawable/logo1"/>
@@ -17,7 +17,7 @@
     <RelativeLayout
         android:id="@+id/layout_form"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="400dp"
         android:layout_centerInParent="true"
         android:layout_marginTop="20dp"
         android:background="@drawable/form_login_bg"
@@ -26,14 +26,44 @@
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login6"
+            android:text="@string/daftar5"
             android:layout_centerHorizontal="true"
             android:textStyle="bold"
             android:textSize="20sp"
             android:textColor="@color/darkGrey"/>
+
+        <EditText
+            android:id="@+id/ed_nama"
+            android:layout_marginTop="75dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:hint="@string/daftar1"
+            android:autofillHints="@string/daftar1"
+            android:textColor="@color/darkGrey"
+            android:backgroundTint="@color/darkGrey"
+            android:textColorHint="@color/darkGrey"
+            android:inputType="text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/ed_identitas"
+            android:layout_below="@+id/ed_nama"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="10dp"
+            android:hint="@string/daftar2"
+            android:textColor="@color/darkGrey"
+            android:backgroundTint="@color/darkGrey"
+            android:autofillHints="@string/daftar2"
+            android:textColorHint="@color/darkGrey"
+            android:inputType="text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <EditText
             android:id="@+id/ed_email"
-            android:layout_marginTop="75dp"
+            android:layout_below="@+id/ed_identitas"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:hint="@string/login1"
@@ -49,7 +79,7 @@
             android:layout_below="@+id/ed_email"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:hint="@string/login3"
             android:textColor="@color/darkGrey"
             android:backgroundTint="@color/darkGrey"
@@ -59,24 +89,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-
         <ImageView
-            android:layout_width="85dp"
+            android:layout_width="75dp"
             android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="-26dp"
+            android:layout_marginBottom="-25dp"
             android:contentDescription="@string/login2"
             android:src="@drawable/tombol_login" />
     </RelativeLayout>
     <TextView
-        android:id="@+id/tbl_daftar"
+        android:id="@+id/tbl_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layout_form"
         android:textColor="@color/darkGrey"
         android:textSize="18sp"
-        android:text="@string/login5"
+        android:text="@string/daftar4"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="50dp"/>
