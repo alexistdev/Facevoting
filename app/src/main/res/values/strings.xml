@@ -10,4 +10,10 @@
     <string name="pre3">Pilih Kandidatmu !</string>
     <string name="pre4">Aplikasi Evoting untuk melakukan pemilihan atau voting secara daring !</string>
     <string name="pre5">Tombol Mulai Sekarang</string>
+    <!--  Login  -->
+    <string name="login1">Email</string>
+    <string name="login2">Gambar tombol login</string>
+    <string name="login3">Password</string>
+    <string name="login4">Gambar logo login</string>
+    <string name="login5">Anda belum memiliki Akun ? Daftar</string>
 </resources>
