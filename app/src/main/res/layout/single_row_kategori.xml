@@ -3,22 +3,25 @@
     android:orientation="vertical"
     android:layout_margin="10dp"
     android:background="@drawable/customborder"
-    android:layout_width="wrap_content"
+    android:layout_width="150dp"
     android:layout_height="wrap_content">
     <ImageView
         android:src="@drawable/logosmall"
-        android:layout_width="150dp"
-        android:layout_height="150dp"/>
+        android:contentDescription="@string/logo_app"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <TextView
         android:id="@+id/txtJudul"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="namaku"
+        android:text="@string/dashboard4"
         android:layout_gravity="center_horizontal"/>
     <Button
         android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="vote"/>
+        android:background="@color/merahMaroon"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/dashboard5"/>
 
 </LinearLayout>

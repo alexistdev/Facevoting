@@ -3,7 +3,9 @@ package com.berkatfaatulohalawa1711010164.facevoting.API;
 import android.content.Context;
 
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants;
+import com.berkatfaatulohalawa1711010164.facevoting.model.PaslonModel;
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetMenu;
+import com.berkatfaatulohalawa1711010164.facevoting.response.GetPaslon;
 
 import java.util.concurrent.TimeUnit;
 
@@ -11,9 +13,17 @@ import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 
 public interface APIService {
+
+    //Mendapatkan data paslon berdasarkan id kategori / ukm atau orkem
+    @FormUrlEncoded
+    @POST("api/paslon/tampil")
+    Call<GetPaslon> postPaslon(@Field("id_kategori") String id_kategori);
 
     //API untuk menampilkan kategori daftar pemilihan umum
     @GET("api/kategori/tampil")

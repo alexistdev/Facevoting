@@ -10,7 +10,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +41,7 @@ public class home_fragment extends Fragment {
     private List<MenuModel> daftarMenu;
     private ProgressDialog progressDialog;
     private Context mContext;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,11 +49,20 @@ public class home_fragment extends Fragment {
         dataInit(mview);
         setupRecyclerView();
         refresh(getContext());
+
+        //refresh data saat di swap
+        mSwipeRefreshLayout.setOnRefreshListener(() -> new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            mSwipeRefreshLayout.setRefreshing(false);
+            refresh(getContext());
+            progressDialog.dismiss();
+            menuAdapter.notifyDataSetChanged();
+        }, 500));
         return mview;
     }
     private void dataInit(View mview){
         progressDialog = ProgressDialog.show(getActivity(), "", "Loading.....", true, false);
         gridMenu = mview.findViewById(R.id.rcMenu);
+        mSwipeRefreshLayout = mview.findViewById(R.id.refresh);
     }
 
     @Override
@@ -64,6 +77,7 @@ public class home_fragment extends Fragment {
         try {
             Call<GetMenu> call = APIService.Factory.create(mContext).listMenu();
             call.enqueue(new Callback<GetMenu>() {
+                @EverythingIsNonNull
                 @Override
                 public void onResponse(Call<GetMenu> call, Response<GetMenu> response) {
                     if(response.isSuccessful()){
@@ -83,7 +97,7 @@ public class home_fragment extends Fragment {
                         }
                     }
                 }
-
+                @EverythingIsNonNull
                 @Override
                 public void onFailure(Call<GetMenu> call, Throwable t) {
                     progressDialog.dismiss();
@@ -98,13 +112,6 @@ public class home_fragment extends Fragment {
         }
     }
     private void setupRecyclerView() {
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext()){
-//            @Override
-//            public RecyclerView.LayoutParams generateDefaultLayoutParams() {
-//                return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//            }
-//        };
-
         if(this.getContext() != null){
             menuAdapter = new MenuAdapter(getContext(),new ArrayList<MenuModel>());
             gridMenu.setHasFixedSize(true);

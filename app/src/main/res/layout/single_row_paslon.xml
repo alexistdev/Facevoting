@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="@drawable/customborder"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/txt_Judul"
+        android:text="PASLON 1"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="KETUA"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/profil"/>
+            <TextView
+                android:id="@+id/txt_ketua"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mr.Berkat"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textSize="12sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WAKIL"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/profil"/>
+            <TextView
+                android:id="@+id/txt_wakil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mr.Berkat"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textSize="12sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.berkatfaatulohalawa1711010164.facevoting">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -10,22 +11,24 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FaceVoting">
-        <activity android:name=".ui.Checkpoint"
-            android:theme="@style/ThemeNoActionBar"
-            />
-        <activity android:name=".ui.Daftar"
-            android:theme="@style/ThemeNoActionBar"
-            />
+        android:theme="@style/Theme.FaceVoting"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".ui.Paslon"></activity>
+        <activity
+            android:name=".ui.Checkpoint"
+            android:theme="@style/ThemeNoActionBar" />
+        <activity
+            android:name=".ui.Daftar"
+            android:theme="@style/ThemeNoActionBar" />
         <activity
             android:name=".ui.Login"
             android:theme="@style/ThemeNoActionBar" />
         <activity
             android:name=".ui.preLogin1"
             android:theme="@style/ThemeNoActionBar" />
-        <activity android:name=".MainActivity"
-            android:theme="@style/ThemeNoActionBar"
-            />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/ThemeNoActionBar" />
         <activity
             android:name=".ui.SplashActivity"
             android:theme="@style/ThemeNoActionBar">
