@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_paslon"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
@@ -8,7 +9,7 @@
     android:orientation="vertical">
     <TextView
         android:id="@+id/txt_Judul"
-        android:text="PASLON 1"
+        android:text="@string/dpaslon1"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
@@ -17,7 +18,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2">
+        android:weightSum="2"
+        android:baselineAligned="false">
         <LinearLayout
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -26,19 +28,22 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="KETUA"
+                android:text="@string/dpaslon2"
                 android:layout_gravity="center_horizontal"
                 android:textStyle="bold"
                 android:textSize="16sp"/>
             <ImageView
-                android:layout_width="match_parent"
+                android:id="@+id/gbr_ketua"
+                android:contentDescription="@string/dpaslon5"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/profil"/>
             <TextView
                 android:id="@+id/txt_ketua"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mr.Berkat"
+                android:text="@string/dpaslon4"
                 android:layout_gravity="center_horizontal"
                 android:textStyle="bold"
                 android:textSize="12sp"/>
@@ -51,19 +56,22 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="WAKIL"
+                android:text="@string/dpaslon3"
                 android:layout_gravity="center_horizontal"
                 android:textStyle="bold"
                 android:textSize="16sp"/>
             <ImageView
-                android:layout_width="match_parent"
+                android:id="@+id/gbr_wakil"
+                android:contentDescription="@string/dpaslon5"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/profil"/>
             <TextView
                 android:id="@+id/txt_wakil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mr.Berkat"
+                android:text="@string/dpaslon4"
                 android:layout_gravity="center_horizontal"
                 android:textStyle="bold"
                 android:textSize="12sp"/>

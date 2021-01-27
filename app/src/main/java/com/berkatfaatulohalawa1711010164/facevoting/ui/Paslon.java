@@ -1,11 +1,13 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ public class Paslon extends AppCompatActivity {
     private PaslonAdapter paslonAdapter;
     private List<PaslonModel> paslonModels;
     private ProgressDialog progressDialog;
+    private Toolbar toolbar;
     private Context mContext;
 
     @Override
@@ -37,13 +40,26 @@ public class Paslon extends AppCompatActivity {
         setContentView(R.layout.activity_paslon);
 
         init();
+        setSupportActionBar(toolbar);
         setupRecyclerView();
-        getPaslon(getApplicationContext());
+        Intent iin= getIntent();
+        Bundle extra = iin.getExtras();
+        if(extra != null) {
+            final String idKategori = extra.getString("id_kategori","0");
+            /* Untuk setup toolbar */
+            getPaslon(getApplicationContext(),idKategori);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle("Daftar Paslon");
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowTitleEnabled(true);
+            }
+        }
     }
 
     private void init(){
         progressDialog = ProgressDialog.show(this, "", "Loading.....", true, false);
         gridView = findViewById(R.id.rcPaslon);
+        toolbar = findViewById(R.id.toolbarmenu);
     }
 
     private void setupRecyclerView() {
@@ -53,10 +69,9 @@ public class Paslon extends AppCompatActivity {
         gridView.setAdapter(paslonAdapter);
     }
 
-    private void getPaslon(Context mContext){
+    private void getPaslon(Context mContext, String kategori){
         try{
-            String idKategori = "1";
-            Call<GetPaslon> call= APIService.Factory.create(mContext).postPaslon("1");
+            Call<GetPaslon> call= APIService.Factory.create(mContext).postPaslon(kategori);
             call.enqueue(new Callback<GetPaslon>() {
                 @Override
                 public void onResponse(Call<GetPaslon> call, Response<GetPaslon> response) {

@@ -6,6 +6,23 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".ui.Paslon">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarmenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bgUtama"
+            android:minHeight="?attr/actionBarSize"
+            app:theme="@style/ThemeNoActionBar"
+            app:titleTextColor="@color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

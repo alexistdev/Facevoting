@@ -41,6 +41,12 @@
     <string name="dashboard3">ID123456879</string>
     <string name="dashboard4">UKM DARMAJAYA</string>
     <string name="dashboard5">VOTE</string>
+    <!--  Daftar Paslon  -->
+    <string name="dpaslon1">PASLON 1</string>
+    <string name="dpaslon2">CALON KETUA</string>
+    <string name="dpaslon3">CALON WAKIL</string>
+    <string name="dpaslon4">Nama Paslon</string>
+    <string name="dpaslon5">Gambar Photo</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

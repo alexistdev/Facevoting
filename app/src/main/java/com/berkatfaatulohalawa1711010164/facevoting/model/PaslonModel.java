@@ -17,8 +17,14 @@ public class PaslonModel {
     private final String photo1_paslon;
     @SerializedName("photo2_paslon")
     private final String photo2_paslon;
+    @SerializedName("visi_misi")
+    private final String visi_misi;
+    @SerializedName("profil_catum")
+    private final String profil_catum;
+    @SerializedName("profil_cawatum")
+    private final String profil_cawatum;
 
-    public PaslonModel(String id_paslon, String id_kategori, String judul_paslon, String ketua_paslon, String wakil_paslon, String photo1_paslon, String photo2_paslon) {
+    public PaslonModel(String id_paslon, String id_kategori, String judul_paslon, String ketua_paslon, String wakil_paslon, String photo1_paslon, String photo2_paslon, String visi_misi, String profil_catum, String profil_cawatum) {
         this.id_paslon = id_paslon;
         this.id_kategori = id_kategori;
         this.judul_paslon = judul_paslon;
@@ -26,6 +32,9 @@ public class PaslonModel {
         this.wakil_paslon = wakil_paslon;
         this.photo1_paslon = photo1_paslon;
         this.photo2_paslon = photo2_paslon;
+        this.visi_misi = visi_misi;
+        this.profil_catum = profil_catum;
+        this.profil_cawatum = profil_cawatum;
     }
 
     public String getId_paslon() {
@@ -54,5 +63,17 @@ public class PaslonModel {
 
     public String getPhoto2_paslon() {
         return photo2_paslon;
+    }
+
+    public String getVisi_misi() {
+        return visi_misi;
+    }
+
+    public String getProfil_catum() {
+        return profil_catum;
+    }
+
+    public String getProfil_cawatum() {
+        return profil_cawatum;
     }
 }

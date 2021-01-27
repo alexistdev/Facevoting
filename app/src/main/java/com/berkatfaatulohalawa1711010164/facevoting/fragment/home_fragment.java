@@ -46,9 +46,11 @@ public class home_fragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mview = inflater.inflate(R.layout.fragment_home, container, false);
+        mContext = getContext();
+
         dataInit(mview);
         setupRecyclerView();
-        refresh(getContext());
+        refresh(mContext);
 
         //refresh data saat di swap
         mSwipeRefreshLayout.setOnRefreshListener(() -> new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -69,7 +71,7 @@ public class home_fragment extends Fragment {
     public void onResume() {
         super.onResume();
         setupRecyclerView();
-        refresh(getContext());
+        refresh(mContext);
         menuAdapter.notifyDataSetChanged();
     }
 
@@ -113,7 +115,7 @@ public class home_fragment extends Fragment {
     }
     private void setupRecyclerView() {
         if(this.getContext() != null){
-            menuAdapter = new MenuAdapter(getContext(),new ArrayList<MenuModel>());
+            menuAdapter = new MenuAdapter(mContext,new ArrayList<MenuModel>());
             gridMenu.setHasFixedSize(true);
             gridMenu.setLayoutManager(new GridLayoutManager(getContext(),2));
             gridMenu.setAdapter(menuAdapter);

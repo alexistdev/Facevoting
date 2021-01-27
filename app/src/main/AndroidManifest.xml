@@ -13,7 +13,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FaceVoting"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.Paslon"></activity>
+        <activity android:name=".ui.Detailpaslon"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/ThemeNoActionBar"
+            />
+        <activity
+            android:name=".ui.Paslon"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/ThemeNoActionBar" />
         <activity
             android:name=".ui.Checkpoint"
             android:theme="@style/ThemeNoActionBar" />
