@@ -1,82 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_paslon"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:background="@drawable/customborder"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="2dp"
+    android:background="@color/white"
     android:orientation="vertical">
-    <TextView
-        android:id="@+id/txt_Judul"
-        android:text="@string/dpaslon1"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
     <LinearLayout
+        android:id="@+id/parentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:baselineAligned="false">
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txt_Judul"
+            android:text="@string/dpaslon1"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
         <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/dpaslon2"
-                android:layout_gravity="center_horizontal"
-                android:textStyle="bold"
-                android:textSize="16sp"/>
-            <ImageView
-                android:id="@+id/gbr_ketua"
-                android:contentDescription="@string/dpaslon5"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/profil"/>
-            <TextView
-                android:id="@+id/txt_ketua"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/dpaslon4"
-                android:layout_gravity="center_horizontal"
-                android:textStyle="bold"
-                android:textSize="12sp"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/dpaslon3"
-                android:layout_gravity="center_horizontal"
-                android:textStyle="bold"
-                android:textSize="16sp"/>
-            <ImageView
-                android:id="@+id/gbr_wakil"
-                android:contentDescription="@string/dpaslon5"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/profil"/>
-            <TextView
-                android:id="@+id/txt_wakil"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/dpaslon4"
-                android:layout_gravity="center_horizontal"
-                android:textStyle="bold"
-                android:textSize="12sp"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:baselineAligned="false">
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dpaslon2"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+                <ImageView
+                    android:id="@+id/gbr_ketua"
+                    android:contentDescription="@string/dpaslon5"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/profil"/>
+                <TextView
+                    android:id="@+id/txt_ketua"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dpaslon4"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dpaslon3"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+                <ImageView
+                    android:id="@+id/gbr_wakil"
+                    android:contentDescription="@string/dpaslon5"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/profil"/>
+                <TextView
+                    android:id="@+id/txt_wakil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dpaslon4"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textSize="12sp"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
 
-</LinearLayout>
+
+</androidx.cardview.widget.CardView>

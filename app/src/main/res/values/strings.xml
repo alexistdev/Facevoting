@@ -47,6 +47,11 @@
     <string name="dpaslon3">CALON WAKIL</string>
     <string name="dpaslon4">Nama Paslon</string>
     <string name="dpaslon5">Gambar Photo</string>
+    <string name="dpaslon6">VISI DAN MISI</string>
+    <string name="dpaslon7">-</string>
+    <string name="dpaslon8">PROFIL PASLON</string>
+    <string name="dpaslon9">COBLOS</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

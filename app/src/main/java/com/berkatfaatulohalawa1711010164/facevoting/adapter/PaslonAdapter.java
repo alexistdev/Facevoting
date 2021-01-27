@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +14,6 @@ import com.berkatfaatulohalawa1711010164.facevoting.R;
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants;
 import com.berkatfaatulohalawa1711010164.facevoting.model.PaslonModel;
 import com.berkatfaatulohalawa1711010164.facevoting.ui.Detailpaslon;
-import com.berkatfaatulohalawa1711010164.facevoting.ui.Paslon;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -52,13 +50,19 @@ public class PaslonAdapter extends RecyclerView.Adapter<PaslonAdapter.MyViewHold
         holder.mTxtKetua.setText(mPaslonList.get(position).getKetua_paslon());
         holder.mTxtWakil.setText(mPaslonList.get(position).getWakil_paslon());
         holder.mTxtJudul.setText(mPaslonList.get(position).getJudul_paslon());
-        holder.mLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mIntent = new Intent(v.getContext(), Detailpaslon.class);
-                mIntent.putExtra("id_kategori",mPaslonList.get(position).getId_kategori());
-                v.getContext().startActivity(mIntent);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent mIntent = new Intent(v.getContext(), Detailpaslon.class);
+            mIntent.putExtra("idPaslon",mPaslonList.get(position).getId_paslon());
+            mIntent.putExtra("judulPaslon",mPaslonList.get(position).getJudul_paslon());
+            mIntent.putExtra("ketua",mPaslonList.get(position).getKetua_paslon());
+            mIntent.putExtra("wakil",mPaslonList.get(position).getWakil_paslon());
+            mIntent.putExtra("photo_ketua",mPaslonList.get(position).getPhoto1_paslon());
+            mIntent.putExtra("photo_wakil",mPaslonList.get(position).getPhoto2_paslon());
+            mIntent.putExtra("visi_misi",mPaslonList.get(position).getVisi_misi());
+            mIntent.putExtra("profil_ketua",mPaslonList.get(position).getProfil_catum());
+            mIntent.putExtra("profil_wakil",mPaslonList.get(position).getProfil_cawatum());
+            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            v.getContext().startActivity(mIntent);
         });
     }
 
@@ -66,7 +70,6 @@ public class PaslonAdapter extends RecyclerView.Adapter<PaslonAdapter.MyViewHold
         @SuppressLint("StaticFieldLeak")
         private static ImageView mGambarKetua,mGambarWakil;
         private final TextView mTxtKetua, mTxtWakil,mTxtJudul;
-        private LinearLayout mLayout;
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
             mTxtKetua = itemView.findViewById(R.id.txt_ketua);
@@ -74,7 +77,6 @@ public class PaslonAdapter extends RecyclerView.Adapter<PaslonAdapter.MyViewHold
             mTxtJudul = itemView.findViewById(R.id.txt_Judul);
             mGambarKetua = itemView.findViewById(R.id.gbr_ketua);
             mGambarWakil  = itemView.findViewById(R.id.gbr_wakil);
-            mLayout = itemView.findViewById(R.id.layout_paslon);
         }
     }
 

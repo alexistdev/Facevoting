@@ -10,21 +10,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import com.berkatfaatulohalawa1711010164.facevoting.API.APIService;
 import com.berkatfaatulohalawa1711010164.facevoting.API.NoConnectivityException;
 import com.berkatfaatulohalawa1711010164.facevoting.R;
 import com.berkatfaatulohalawa1711010164.facevoting.adapter.PaslonAdapter;
-import com.berkatfaatulohalawa1711010164.facevoting.model.MenuModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.PaslonModel;
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetPaslon;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 
 public class Paslon extends AppCompatActivity {
     private RecyclerView gridView;
@@ -32,7 +29,7 @@ public class Paslon extends AppCompatActivity {
     private List<PaslonModel> paslonModels;
     private ProgressDialog progressDialog;
     private Toolbar toolbar;
-    private Context mContext;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +61,7 @@ public class Paslon extends AppCompatActivity {
 
     private void setupRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
-        paslonAdapter = new PaslonAdapter(getApplicationContext(), new ArrayList<PaslonModel>());
+        paslonAdapter = new PaslonAdapter(getApplicationContext(), new ArrayList<>());
         gridView.setLayoutManager(linearLayoutManager);
         gridView.setAdapter(paslonAdapter);
     }
@@ -73,6 +70,7 @@ public class Paslon extends AppCompatActivity {
         try{
             Call<GetPaslon> call= APIService.Factory.create(mContext).postPaslon(kategori);
             call.enqueue(new Callback<GetPaslon>() {
+                @EverythingIsNonNull
                 @Override
                 public void onResponse(Call<GetPaslon> call, Response<GetPaslon> response) {
                     progressDialog.dismiss();
@@ -83,7 +81,7 @@ public class Paslon extends AppCompatActivity {
                         }
                     }
                 }
-
+                @EverythingIsNonNull
                 @Override
                 public void onFailure(Call<GetPaslon> call, Throwable t) {
                     progressDialog.dismiss();
