@@ -109,6 +109,7 @@ public class home_fragment extends Fragment {
                 }
             });
         } catch (Exception e) {
+            progressDialog.dismiss();
             e.printStackTrace();
             displayExceptionMessage(e.getMessage());
         }
