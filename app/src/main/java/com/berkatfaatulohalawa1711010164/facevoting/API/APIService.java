@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants;
 import com.berkatfaatulohalawa1711010164.facevoting.model.PaslonModel;
+import com.berkatfaatulohalawa1711010164.facevoting.model.UserModel;
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetMenu;
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetPaslon;
 
@@ -19,6 +20,15 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface APIService {
+
+    //API untuk menambah data mahasiswa
+    @FormUrlEncoded
+    @POST("api/Daftar/tambah")
+    Call<UserModel> daftarUser(@Field("nama") String nama,
+                                    @Field("identitas") String identitas,
+                                    @Field("email") String email,
+                                    @Field("password") String password,
+                                    @Field("token_firebase") String token_firebase);
 
     //Mendapatkan data paslon berdasarkan id kategori / ukm atau orkem
     @FormUrlEncoded

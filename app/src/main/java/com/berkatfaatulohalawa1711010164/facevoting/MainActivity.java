@@ -12,6 +12,7 @@ import com.berkatfaatulohalawa1711010164.facevoting.fragment.votefragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
+
 public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("NonConstantResourceId")
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return loadFragment(fragment);
         });
+
     }
 
     /* Meload Fragment */
