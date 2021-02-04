@@ -5,12 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.berkatfaatulohalawa1711010164.facevoting.API.APIService;
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity;
 import com.berkatfaatulohalawa1711010164.facevoting.R;
@@ -19,14 +17,11 @@ import com.berkatfaatulohalawa1711010164.facevoting.helper.MyFirebaseMessagingSe
 import com.berkatfaatulohalawa1711010164.facevoting.helper.SessionHelper;
 import com.berkatfaatulohalawa1711010164.facevoting.model.ErrorModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.UserModel;
-
-import java.util.Random;
 import java.util.regex.Pattern;
-
-import okhttp3.Interceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 
 public class Daftar extends AppCompatActivity {
     private TextView btnLogin;
@@ -39,24 +34,22 @@ public class Daftar extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daftar);
         init();
-//        if(SessionHelper.isLoggedIn(this)){
-//            Intent intent = new Intent(Daftar.this, MainActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Daftar.this, Login.class);
+        if(SessionHelper.sudahLogin(this)){
+            if(SessionHelper.sudahValidasi(this)){
+                Intent intent = new Intent(Daftar.this, MainActivity.class);
                 startActivity(intent);
+                finish();
+            } else{
+                Intent intent = new Intent(Daftar.this, Checkpoint.class);
+                startActivity(intent);
+                finish();
             }
+        }
+        btnLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(Daftar.this, Login.class);
+            startActivity(intent);
         });
-        btnDaftar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                proses();
-            }
-        });
+        btnDaftar.setOnClickListener(v -> proses());
     }
 
     private void proses(){
@@ -74,26 +67,21 @@ public class Daftar extends AppCompatActivity {
                 try{
                     Call<UserModel> call = APIService.Factory.create(getApplicationContext()).daftarUser(nama_lengkap,identitas,email,password,token_firebase);
                     call.enqueue(new Callback<UserModel>() {
+                        @EverythingIsNonNull
                         @Override
                         public void onResponse(Call<UserModel> call, Response<UserModel> response) {
                             hideLoading();
                             if(response.isSuccessful()){
-                                String id_user = response.body().getId_user();
-                                String token_user = random_token();
-                                if (SessionHelper.login(Daftar.this, id_user,token_user)){
-                                    Intent intent = new Intent(Daftar.this, MainActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-                                    startActivity(intent);
-                                    finish();
-                                    tampilPesan("Anda berhasil mendaftar !");
-                                }
-
+                                Intent intent = new Intent(Daftar.this, Checkpoint.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+                                startActivity(intent);
+                                finish();
                             } else {
                                 ErrorModel error = ErrorHelper.parseError(response);
                                 tampilPesan(error.message());
                             }
                         }
-
+                        @EverythingIsNonNull
                         @Override
                         public void onFailure(Call<UserModel> call, Throwable t) {
                             hideLoading();
@@ -112,17 +100,6 @@ public class Daftar extends AppCompatActivity {
         }
     }
 
-    private static String random_token() {
-        Random generator = new Random();
-        StringBuilder randomStringBuilder = new StringBuilder();
-        int randomLength = generator.nextInt(5);
-        char tempChar;
-        for (int i = 0; i < randomLength; i++){
-            tempChar = (char) (generator.nextInt(96) + 32);
-            randomStringBuilder.append(tempChar);
-        }
-        return randomStringBuilder.toString();
-    }
 
     private boolean cekEmail(String email){
         return Pattern.compile("^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity;
 import com.berkatfaatulohalawa1711010164.facevoting.R;
 import com.berkatfaatulohalawa1711010164.facevoting.helper.MyFirebaseMessagingService;
+import com.berkatfaatulohalawa1711010164.facevoting.helper.SessionHelper;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 public class SplashActivity extends AppCompatActivity {
@@ -21,6 +22,18 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        if(SessionHelper.sudahLogin(this)){
+            if(SessionHelper.sudahValidasi(this)){
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            } else{
+                Intent intent = new Intent(SplashActivity.this, Checkpoint.class);
+                startActivity(intent);
+                finish();
+            }
+        }
 
         TextView btnStart = findViewById(R.id.tombol_start);
 
@@ -32,9 +45,10 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
 
-        /* Mendapatkan data token */
-        String mytoken = MyFirebaseMessagingService.getToken(getApplicationContext());
-        Toast.makeText(this, mytoken, Toast.LENGTH_SHORT).show();
-        //Log.d("newToken", this.getPreferences(Context.MODE_PRIVATE).getString("fb", "empty :("));
+        if(SessionHelper.sudahLogin(this)){
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }

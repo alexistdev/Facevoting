@@ -3,6 +3,7 @@ package com.berkatfaatulohalawa1711010164.facevoting.API;
 import android.content.Context;
 
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants;
+import com.berkatfaatulohalawa1711010164.facevoting.model.LoginModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.PaslonModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.UserModel;
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetMenu;
@@ -20,6 +21,10 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface APIService {
+    @FormUrlEncoded
+    @POST("api/Login/otentikasi")
+    Call<LoginModel> validasiLogin(@Field("email") String email,
+                               @Field("password") String password);
 
     //API untuk menambah data mahasiswa
     @FormUrlEncoded
