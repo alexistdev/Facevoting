@@ -30,7 +30,6 @@ public class Paslon extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private Toolbar toolbar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

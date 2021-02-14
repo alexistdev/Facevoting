@@ -1,16 +1,15 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import com.berkatfaatulohalawa1711010164.facevoting.R;
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants;
 import com.bumptech.glide.Glide;
@@ -23,6 +22,7 @@ public class Detailpaslon extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     private static  ImageView mPhotoKetua, mPhotoWakil;
     private Context mContext;
+    private Button mCoblos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +68,11 @@ public class Detailpaslon extends AppCompatActivity {
                     .into(Detailpaslon.mPhotoWakil);
             progressDialog.dismiss();
         }
+        mCoblos.setOnClickListener(v -> {
+            Intent intent = new Intent(Detailpaslon.this, validasi.class);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void init(){
@@ -82,5 +87,6 @@ public class Detailpaslon extends AppCompatActivity {
         mVisiMisi = findViewById(R.id.txt_visimisi);
         mProfilKetua = findViewById(R.id.txt_profil_ketua);
         mProfilWakil = findViewById(R.id.txt_profil_wakil);
+        mCoblos = findViewById(R.id.btnCoblos);
     }
 }

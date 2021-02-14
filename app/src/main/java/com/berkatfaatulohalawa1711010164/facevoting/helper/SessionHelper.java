@@ -35,7 +35,7 @@ public class SessionHelper {
     public static boolean sudahValidasi(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
                 Constants.USER_KEY, Context.MODE_PRIVATE);
-        String userJson = sharedPreferences.getString("validasi", "");
+        String userJson = sharedPreferences.getString("validasi", null);
         if (userJson != null) {
             return true;
         } else {

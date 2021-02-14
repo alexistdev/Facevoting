@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class MenuModel {
     @SerializedName("id_kategori")
     private final String id_kategori;
-    @SerializedName("Nama_kategori")
+    @SerializedName("nama_kategori")
     private final String Nama_kategori;
     @SerializedName("logo_kategori")
     private final String logo_kategori;

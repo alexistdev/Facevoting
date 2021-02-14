@@ -4,6 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false"
+        />
 
     <application
         android:allowBackup="true"
@@ -13,10 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FaceVoting"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.Detailpaslon"
+        <activity android:name=".ui.validasi" />
+        <activity
+            android:name=".ui.Detailpaslon"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/ThemeNoActionBar"
-            />
+            android:theme="@style/ThemeNoActionBar" />
         <activity
             android:name=".ui.Paslon"
             android:parentActivityName=".MainActivity"
@@ -46,12 +51,24 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".helper.MyFirebaseMessagingService"
+        <service
+            android:name=".helper.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
     </application>
 
+    <queries>
+
+
+        <!-- Camera -->
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+
+
+    </queries>
 </manifest>

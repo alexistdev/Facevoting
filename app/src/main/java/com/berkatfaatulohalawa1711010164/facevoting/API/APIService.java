@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants;
 import com.berkatfaatulohalawa1711010164.facevoting.model.LoginModel;
+import com.berkatfaatulohalawa1711010164.facevoting.model.MessageModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.PaslonModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.UserModel;
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetMenu;
@@ -11,6 +12,8 @@ import com.berkatfaatulohalawa1711010164.facevoting.response.GetPaslon;
 
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -18,9 +21,21 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 public interface APIService {
+    @Multipart
+    @POST("api/Gambar/tambah")
+    Call<MessageModel> rekamWajah(@Part("id_user") String id,
+                                  @Part MultipartBody.Part upload);
+
+
+    @FormUrlEncoded
+    @POST("api/Login/sudahlogin")
+    Call<LoginModel> dapatstatus(@Field("id_user") String id_user);
+
     @FormUrlEncoded
     @POST("api/Login/otentikasi")
     Call<LoginModel> validasiLogin(@Field("email") String email,
@@ -47,6 +62,7 @@ public interface APIService {
     class Factory{
         public static APIService create(Context mContext){
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
             builder.readTimeout(20, TimeUnit.SECONDS);
             builder.connectTimeout(20, TimeUnit.SECONDS);
             builder.writeTimeout(20, TimeUnit.SECONDS);

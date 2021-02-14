@@ -16,6 +16,7 @@
         android:id="@+id/txtJudul"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:gravity="center_horizontal"
         android:text="@string/dashboard4"
         android:layout_gravity="center_horizontal"/>

@@ -27,4 +27,7 @@ public class LoginModel {
     public String getValidasi() {
         return validasi;
     }
+
+
+
 }

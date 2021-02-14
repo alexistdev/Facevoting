@@ -27,6 +27,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    buildFeatures{
+        dataBinding true
+    }
 }
 
 dependencies {
@@ -44,16 +48,15 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.3'
     implementation 'androidx.navigation:navigation-ui:2.3.3'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-    //untuk gambar
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
+
     //cardview
-    implementation 'com.google.android.material:material:1.3.0-rc01'
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     //untuk swap refresh
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13.1'
@@ -64,6 +67,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:21.0.1'
     implementation platform('com.google.firebase:firebase-bom:26.4.0')
     implementation 'com.google.firebase:firebase-analytics'
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'
