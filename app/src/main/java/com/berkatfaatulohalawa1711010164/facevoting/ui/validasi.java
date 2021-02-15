@@ -1,6 +1,9 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -10,29 +13,24 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-
 import com.berkatfaatulohalawa1711010164.facevoting.API.APIService;
 import com.berkatfaatulohalawa1711010164.facevoting.BuildConfig;
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity;
 import com.berkatfaatulohalawa1711010164.facevoting.R;
+import com.berkatfaatulohalawa1711010164.facevoting.config.Constants;
 import com.berkatfaatulohalawa1711010164.facevoting.helper.ErrorHelper;
 import com.berkatfaatulohalawa1711010164.facevoting.model.ErrorModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.MessageModel;
-
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -43,7 +41,7 @@ import retrofit2.internal.EverythingIsNonNull;
 
 public class validasi extends AppCompatActivity {
     private ImageView mPhoto;
-    private TextView mText;
+    private ProgressDialog progressDialog;
     private Button mRekam,mCek;
     private static final int REQUEST_IMAGE_CAPTURE = 101;
     String currentPhotoPath;
@@ -57,6 +55,7 @@ public class validasi extends AppCompatActivity {
 
     }
 
+    /* Mengambil gambar */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -81,7 +80,9 @@ public class validasi extends AppCompatActivity {
 
     public void init()
     {
-        mText = findViewById(R.id.txtTesting);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading.....");
         mPhoto =findViewById(R.id.photo);
         mRekam = findViewById(R.id.btnRekam);
         mCek = findViewById(R.id.btnCek);
@@ -93,6 +94,7 @@ public class validasi extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==REQUEST_IMAGE_CAPTURE && resultCode==RESULT_OK){
+            /* Pengaturan Photo*/
             int targetW = mPhoto.getWidth();
             int targetH = mPhoto.getHeight();
             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -103,19 +105,34 @@ public class validasi extends AppCompatActivity {
             bmOptions.inJustDecodeBounds = false;
             bmOptions.inSampleSize = scaleFactor;
             Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+            Bitmap converetdImage = getResizedBitmap(bitmap, 1024);
+            /* Konversi Bitmap ke byteArray*/
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            converetdImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+
+            /*Preview Gambar*/
             mPhoto.setImageBitmap(bitmap);
-            mText.setText(currentPhotoPath);
             mRekam.setVisibility(View.GONE);
             mCek.setVisibility(View.VISIBLE);
+
+            /* Pengaturan Tombol Validasi*/
             mCek.setOnClickListener(v -> {
-                File file = savebitmap(bitmap);
-                RequestBody idUser = RequestBody.create(MediaType.parse("multipart/form-data"), "4");
-                MultipartBody.Part filePart = MultipartBody.Part.createFormData("upload", file.getName(), RequestBody.create(MediaType.parse("files/Pictures/*"), file));
+                tampilLoading();
+                /* Mengecek user id*/
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(
+                        Constants.USER_KEY, Context.MODE_PRIVATE);
+                String myId = sharedPreferences.getString("id_user", null);
+                RequestBody idUser = RequestBody.create(MediaType.parse("multipart/form-data"), myId);
+                RequestBody requestBody = RequestBody
+                        .create(MediaType.parse("application/octet-stream"), byteArray);
+                MultipartBody.Part filePart = MultipartBody.Part.createFormData("upload",  currentPhotoPath, requestBody);
                 Call<MessageModel> call = APIService.Factory.create(getApplicationContext()).rekamWajah(idUser,filePart);
                 call.enqueue(new Callback<MessageModel>() {
                     @EverythingIsNonNull
                     @Override
                     public void onResponse(Call<MessageModel> call, Response<MessageModel> response) {
+                        hideLoading();
                         if(response.isSuccessful()){
                             Intent intent = new Intent(validasi.this, MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
@@ -129,6 +146,7 @@ public class validasi extends AppCompatActivity {
                     @EverythingIsNonNull
                     @Override
                     public void onFailure(Call<MessageModel> call, Throwable t) {
+                        hideLoading();
                         tampilPesan(t.getMessage());
                     }
                 });
@@ -136,47 +154,53 @@ public class validasi extends AppCompatActivity {
         }
     }
 
+    /* Membuat gambar dari camera */
     private File createImageFile() throws IOException {
-        // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        //String timeStamp =
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".png",         /* suffix */
                 storageDir      /* directory */
         );
-        // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
-    private File savebitmap(Bitmap bmp) {
-        String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-        OutputStream outStream = null;
-        File file = new File(extStorageDirectory, "temp.png");
-        if (file.exists()) {
-            file.delete();
-            file = new File(extStorageDirectory, "temp.png");
+    /* Mengurangi ukuran dari Bitmap */
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
 
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
         }
-
-        try {
-            outStream = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-            outStream.flush();
-            outStream.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return file;
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
+    /* Menampilkan pesan notifikasi */
     public void tampilPesan(String pesan)
     {
         Toast.makeText(getApplicationContext(), pesan, Toast.LENGTH_LONG).show();
+    }
+
+    /* Menampilkan Loading */
+    private void tampilLoading(){
+        if(!progressDialog.isShowing()){
+            progressDialog.show();
+        }
+    }
+
+    /* Menghilangkan Loading */
+    private void hideLoading(){
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
     }
 }
