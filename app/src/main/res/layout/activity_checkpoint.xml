@@ -64,6 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"/>
     <ImageView
+        android:id="@+id/btnLanjutkan"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"
         android:layout_marginTop="30dp"

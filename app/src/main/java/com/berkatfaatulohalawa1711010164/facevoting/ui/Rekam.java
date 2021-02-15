@@ -1,5 +1,7 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 import com.berkatfaatulohalawa1711010164.facevoting.API.APIService;
 import com.berkatfaatulohalawa1711010164.facevoting.BuildConfig;
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity;
@@ -40,7 +40,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
-public class validasi extends AppCompatActivity {
+public class Rekam extends AppCompatActivity {
     private ImageView mPhoto;
     private ProgressDialog progressDialog;
     private Button mRekam,mCek;
@@ -50,12 +50,10 @@ public class validasi extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_validasi);
+        setContentView(R.layout.activity_rekam);
         init();
         mRekam.setOnClickListener(v -> dispatchTakePictureIntent());
-
     }
-
     /* Mengambil gambar */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -76,7 +74,6 @@ public class validasi extends AppCompatActivity {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
-
     }
 
     public void init()
@@ -143,7 +140,7 @@ public class validasi extends AppCompatActivity {
                     public void onResponse(Call<MessageModel> call, Response<MessageModel> response) {
                         hideLoading();
                         if(response.isSuccessful()){
-                            Intent intent = new Intent(validasi.this, MainActivity.class);
+                            Intent intent = new Intent(Rekam.this, Checkpoint.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                             startActivity(intent);
                             finish();

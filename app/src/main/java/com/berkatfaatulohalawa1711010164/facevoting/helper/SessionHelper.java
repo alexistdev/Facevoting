@@ -21,6 +21,7 @@ public class SessionHelper {
         return true;
     }
 
+
     public static boolean sudahLogin(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
                 Constants.USER_KEY, Context.MODE_PRIVATE);

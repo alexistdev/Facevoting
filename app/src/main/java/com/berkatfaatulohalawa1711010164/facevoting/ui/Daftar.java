@@ -72,10 +72,14 @@ public class Daftar extends AppCompatActivity {
                         public void onResponse(Call<UserModel> call, Response<UserModel> response) {
                             hideLoading();
                             if(response.isSuccessful()){
-                                Intent intent = new Intent(Daftar.this, Checkpoint.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-                                startActivity(intent);
-                                finish();
+                                if(response.body() !=null) {
+                                    if (SessionHelper.login(Daftar.this, response.body().getId_user(), response.body().getToken_login(), response.body().getValidasi())) {
+                                        Intent intent = new Intent(Daftar.this, Rekam.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }
                             } else {
                                 ErrorModel error = ErrorHelper.parseError(response);
                                 tampilPesan(error.message());
