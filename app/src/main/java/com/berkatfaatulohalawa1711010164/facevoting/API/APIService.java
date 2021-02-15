@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Cache;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -28,7 +29,7 @@ import retrofit2.http.Part;
 public interface APIService {
     @Multipart
     @POST("api/Gambar/tambah")
-    Call<MessageModel> rekamWajah(@Part("id_user") String id,
+    Call<MessageModel> rekamWajah(@Part("id_user") RequestBody id,
                                   @Part MultipartBody.Part upload);
 
 

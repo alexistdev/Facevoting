@@ -38,7 +38,43 @@ public class PaslonModel {
         this.profil_cawatum = profil_cawatum;
     }
 
+    public String getId_paslon() {
+        return id_paslon;
+    }
 
+    public String getId_kategori() {
+        return id_kategori;
+    }
 
+    public String getJudul_paslon() {
+        return judul_paslon;
+    }
 
+    public String getKetua_paslon() {
+        return ketua_paslon;
+    }
+
+    public String getWakil_paslon() {
+        return wakil_paslon;
+    }
+
+    public String getPhoto1_paslon() {
+        return photo1_paslon;
+    }
+
+    public String getPhoto2_paslon() {
+        return photo2_paslon;
+    }
+
+    public String getVisi_misi() {
+        return visi_misi;
+    }
+
+    public String getProfil_catum() {
+        return profil_catum;
+    }
+
+    public String getProfil_cawatum() {
+        return profil_cawatum;
+    }
 }
