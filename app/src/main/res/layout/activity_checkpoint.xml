@@ -65,15 +65,26 @@
         android:layout_centerHorizontal="true"/>
     <ImageView
         android:id="@+id/btnLanjutkan"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/coblos"
         android:layout_marginBottom="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:contentDescription="@string/checkp6"
         android:src="@drawable/tombol_lanjut"/>
-
+    <ImageView
+        android:id="@+id/btnRekam"
+        android:layout_below="@+id/btnLanjutkan"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:contentDescription="@string/checkp6"
+        android:src="@drawable/btn_rekam_wajah"/>
 
 </RelativeLayout>

@@ -122,7 +122,6 @@ public class validasi extends AppCompatActivity {
 
             /*Preview Gambar*/
             mPhoto.setImageBitmap(rotatedBitmap);
-            mRekam.setVisibility(View.GONE);
             mCek.setVisibility(View.VISIBLE);
 
             /* Pengaturan Tombol Validasi*/
@@ -136,17 +135,31 @@ public class validasi extends AppCompatActivity {
                 RequestBody requestBody = RequestBody
                         .create(MediaType.parse("application/octet-stream"), byteArray);
                 MultipartBody.Part filePart = MultipartBody.Part.createFormData("upload",  currentPhotoPath, requestBody);
-                Call<MessageModel> call = APIService.Factory.create(getApplicationContext()).rekamWajah(idUser,filePart);
+
+                Call<MessageModel> call = APIService.Factory.create(getApplicationContext()).cekWajah(idUser,filePart);
                 call.enqueue(new Callback<MessageModel>() {
                     @EverythingIsNonNull
                     @Override
                     public void onResponse(Call<MessageModel> call, Response<MessageModel> response) {
                         hideLoading();
                         if(response.isSuccessful()){
-                            Intent intent = new Intent(validasi.this, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-                            startActivity(intent);
-                            finish();
+                            if(response.body() != null){
+                                String status = response.body().getMessage();
+                                if(status.equals("match")){
+                                    Intent intent = new Intent(validasi.this, Landing.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+                                    startActivity(intent);
+                                    finish();
+                                } else if(status.equals("no match")){
+                                    tampilPesan("Wajah tidak cocok, silahkan ulangi pengambilan gambar");
+                                } else {
+                                    Intent intent = new Intent(validasi.this, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+                                    startActivity(intent);
+                                    finish();
+                                    tampilPesan("Ada kesalahan sistem, silahkan dicoba lagi nanti !");
+                                }
+                            }
                         } else {
                             ErrorModel error = ErrorHelper.parseError(response);
                             tampilPesan(error.message());

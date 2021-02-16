@@ -30,6 +30,6 @@
         android:visibility="gone"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
-        android:text="@string/validasi2"/>
+        android:text="@string/validasi3"/>
 
 </LinearLayout>

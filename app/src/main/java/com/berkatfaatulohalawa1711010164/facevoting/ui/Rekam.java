@@ -19,10 +19,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import com.berkatfaatulohalawa1711010164.facevoting.API.APIService;
 import com.berkatfaatulohalawa1711010164.facevoting.BuildConfig;
-import com.berkatfaatulohalawa1711010164.facevoting.MainActivity;
 import com.berkatfaatulohalawa1711010164.facevoting.R;
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants;
 import com.berkatfaatulohalawa1711010164.facevoting.helper.ErrorHelper;
+import com.berkatfaatulohalawa1711010164.facevoting.helper.SessionHelper;
 import com.berkatfaatulohalawa1711010164.facevoting.model.ErrorModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.MessageModel;
 import java.io.ByteArrayOutputStream;
@@ -119,7 +119,6 @@ public class Rekam extends AppCompatActivity {
 
             /*Preview Gambar*/
             mPhoto.setImageBitmap(rotatedBitmap);
-            mRekam.setVisibility(View.GONE);
             mCek.setVisibility(View.VISIBLE);
 
             /* Pengaturan Tombol Validasi*/
@@ -140,10 +139,12 @@ public class Rekam extends AppCompatActivity {
                     public void onResponse(Call<MessageModel> call, Response<MessageModel> response) {
                         hideLoading();
                         if(response.isSuccessful()){
-                            Intent intent = new Intent(Rekam.this, Checkpoint.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-                            startActivity(intent);
-                            finish();
+                            if (SessionHelper.catatrekam(Rekam.this)){
+                                    Intent intent = new Intent(Rekam.this, Checkpoint.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                }
                         } else {
                             ErrorModel error = ErrorHelper.parseError(response);
                             tampilPesan(error.message());

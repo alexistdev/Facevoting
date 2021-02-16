@@ -28,6 +28,10 @@ import retrofit2.http.Part;
 
 public interface APIService {
     @Multipart
+    @POST("api/Gambar/cek")
+    Call<MessageModel> cekWajah(@Part("id_user") RequestBody id,
+                                  @Part MultipartBody.Part upload);
+    @Multipart
     @POST("api/Gambar/tambah")
     Call<MessageModel> rekamWajah(@Part("id_user") RequestBody id,
                                   @Part MultipartBody.Part upload);

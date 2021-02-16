@@ -55,6 +55,10 @@
     <!--  Validiasi  -->
     <string name="validasi1">REKAM PHOTO</string>
     <string name="validasi2">CEK VALIDASI</string>
+    <string name="validasi3">GUNAKAN GAMBAR INI</string>
+    <string name="validasi4">BACK</string>
+    <string name="validasi5">SELAMAT ANDA BERHASIL VALIDASI</string>
+
 
 
     <!-- TODO: Remove or change this placeholder text -->

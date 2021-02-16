@@ -74,7 +74,7 @@ public class Daftar extends AppCompatActivity {
                             if(response.isSuccessful()){
                                 if(response.body() !=null) {
                                     if (SessionHelper.login(Daftar.this, response.body().getId_user(), response.body().getToken_login(), response.body().getValidasi())) {
-                                        Intent intent = new Intent(Daftar.this, Rekam.class);
+                                        Intent intent = new Intent(Daftar.this, Checkpoint.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
                                         finish();
