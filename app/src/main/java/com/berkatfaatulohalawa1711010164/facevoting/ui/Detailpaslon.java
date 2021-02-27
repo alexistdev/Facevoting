@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.berkatfaatulohalawa1711010164.facevoting.R;
@@ -42,6 +44,8 @@ public class Detailpaslon extends AppCompatActivity {
 
 
         if(extra != null) {
+            final String idPaslon = extra.getString("idPaslon","0");
+            final String idKategori = extra.getString("idKategori","0");
             final String ketua = extra.getString("ketua","0");
             final String wakil = extra.getString("wakil","0");
             final String judulPaslon = extra.getString("judulPaslon","0");
@@ -67,12 +71,16 @@ public class Detailpaslon extends AppCompatActivity {
                     .apply(new RequestOptions().error(R.drawable.profil))
                     .into(Detailpaslon.mPhotoWakil);
             progressDialog.dismiss();
+            mCoblos.setOnClickListener(v -> {
+                Intent intent = new Intent(Detailpaslon.this, validasi.class);
+                intent.putExtra("idPaslon",idPaslon);
+                intent.putExtra("idKategori",idKategori);
+                startActivity(intent);
+                finish();
+            });
         }
-        mCoblos.setOnClickListener(v -> {
-            Intent intent = new Intent(Detailpaslon.this, validasi.class);
-            startActivity(intent);
-            finish();
-        });
+
+
     }
 
     private void init(){
@@ -88,5 +96,9 @@ public class Detailpaslon extends AppCompatActivity {
         mProfilKetua = findViewById(R.id.txt_profil_ketua);
         mProfilWakil = findViewById(R.id.txt_profil_wakil);
         mCoblos = findViewById(R.id.btnCoblos);
+    }
+    private void displayExceptionMessage(String msg)
+    {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 }

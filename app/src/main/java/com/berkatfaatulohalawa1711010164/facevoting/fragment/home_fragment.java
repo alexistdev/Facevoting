@@ -2,6 +2,7 @@ package com.berkatfaatulohalawa1711010164.facevoting.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.berkatfaatulohalawa1711010164.facevoting.API.APIService;
 import com.berkatfaatulohalawa1711010164.facevoting.API.NoConnectivityException;
 import com.berkatfaatulohalawa1711010164.facevoting.R;
 import com.berkatfaatulohalawa1711010164.facevoting.adapter.MenuAdapter;
+import com.berkatfaatulohalawa1711010164.facevoting.config.Constants;
 import com.berkatfaatulohalawa1711010164.facevoting.model.MenuModel;
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetMenu;
 
@@ -52,19 +54,19 @@ public class home_fragment extends Fragment {
         setupRecyclerView();
         refresh(mContext);
 
-        //refresh data saat di swap
         mSwipeRefreshLayout.setOnRefreshListener(() -> new Handler(Looper.getMainLooper()).postDelayed(() -> {
             mSwipeRefreshLayout.setRefreshing(false);
             refresh(getContext());
-            progressDialog.dismiss();
             menuAdapter.notifyDataSetChanged();
         }, 500));
         return mview;
     }
     private void dataInit(View mview){
-        progressDialog = ProgressDialog.show(getActivity(), "", "Loading.....", true, false);
         gridMenu = mview.findViewById(R.id.rcMenu);
         mSwipeRefreshLayout = mview.findViewById(R.id.refresh);
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading.....");
     }
 
     @Override
@@ -77,11 +79,16 @@ public class home_fragment extends Fragment {
 
     public void refresh(Context mContext) {
         try {
-            Call<GetMenu> call = APIService.Factory.create(mContext).listMenu();
+            tampilLoading();
+            SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(
+                    Constants.USER_KEY, Context.MODE_PRIVATE);
+            String idUser = sharedPreferences.getString("id_user", "");
+            Call<GetMenu> call = APIService.Factory.create(mContext).listMenu(idUser);
             call.enqueue(new Callback<GetMenu>() {
                 @EverythingIsNonNull
                 @Override
                 public void onResponse(Call<GetMenu> call, Response<GetMenu> response) {
+                    hideLoading();
                     if(response.isSuccessful()){
                         try {
                             if(response.body() != null){
@@ -102,14 +109,13 @@ public class home_fragment extends Fragment {
                 @EverythingIsNonNull
                 @Override
                 public void onFailure(Call<GetMenu> call, Throwable t) {
-                    progressDialog.dismiss();
+                    hideLoading();
                     if(t instanceof NoConnectivityException) {
                         displayExceptionMessage("Offline, cek koneksi internet anda!");
                     }
                 }
             });
         } catch (Exception e) {
-            progressDialog.dismiss();
             e.printStackTrace();
             displayExceptionMessage(e.getMessage());
         }
@@ -120,6 +126,20 @@ public class home_fragment extends Fragment {
             gridMenu.setHasFixedSize(true);
             gridMenu.setLayoutManager(new GridLayoutManager(getContext(),2));
             gridMenu.setAdapter(menuAdapter);
+        }
+    }
+
+    /* Menampilkan Loading */
+    private void tampilLoading(){
+        if(!progressDialog.isShowing()){
+            progressDialog.show();
+        }
+    }
+
+    /* Menghilangkan Loading */
+    private void hideLoading(){
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
         }
     }
 

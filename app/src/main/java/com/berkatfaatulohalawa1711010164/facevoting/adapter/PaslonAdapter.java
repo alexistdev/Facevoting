@@ -54,6 +54,7 @@ public class PaslonAdapter extends RecyclerView.Adapter<PaslonAdapter.MyViewHold
         holder.itemView.setOnClickListener(v -> {
             Intent mIntent = new Intent(v.getContext(), Detailpaslon.class);
             mIntent.putExtra("idPaslon",mPaslonList.get(position).getId_paslon());
+            mIntent.putExtra("idKategori",mPaslonList.get(position).getId_kategori());
             mIntent.putExtra("judulPaslon",mPaslonList.get(position).getJudul_paslon());
             mIntent.putExtra("ketua",mPaslonList.get(position).getKetua_paslon());
             mIntent.putExtra("wakil",mPaslonList.get(position).getWakil_paslon());

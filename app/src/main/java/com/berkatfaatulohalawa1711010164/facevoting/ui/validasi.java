@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -110,18 +109,27 @@ public class validasi extends AppCompatActivity {
 
 
             /* Rotasi Bitmap */
-            Matrix matrix = new Matrix();
-            matrix.postRotate(270);
-            Bitmap scaledBitmap = Bitmap.createScaledBitmap(converetdImage, mPhoto.getWidth(), mPhoto.getHeight(), true);
-            Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+//            Matrix matrix = new Matrix();
+//            matrix.postRotate(270);
+//            Bitmap scaledBitmap = Bitmap.createScaledBitmap(converetdImage, mPhoto.getWidth(), mPhoto.getHeight(), true);
+//            Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+
+//            /* Konversi Bitmap ke byteArray*/
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            rotatedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//            byte[] byteArray = stream.toByteArray();
+//
+//            /*Preview Gambar*/
+//            mPhoto.setImageBitmap(rotatedBitmap);
+//            mCek.setVisibility(View.VISIBLE);
 
             /* Konversi Bitmap ke byteArray*/
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            rotatedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            converetdImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] byteArray = stream.toByteArray();
 
             /*Preview Gambar*/
-            mPhoto.setImageBitmap(rotatedBitmap);
+            mPhoto.setImageBitmap(converetdImage);
             mCek.setVisibility(View.VISIBLE);
 
             /* Pengaturan Tombol Validasi*/
@@ -146,6 +154,7 @@ public class validasi extends AppCompatActivity {
                             if(response.body() != null){
                                 String status = response.body().getMessage();
                                 if(status.equals("match")){
+                                    simpan_suara(myId);
                                     Intent intent = new Intent(validasi.this, Landing.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                                     startActivity(intent);
@@ -225,4 +234,35 @@ public class validasi extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
+
+    private void simpan_suara(String idUser)
+    {
+        Intent iin= getIntent();
+        Bundle extra = iin.getExtras();
+        if(extra != null) {
+            final String idPaslon = extra.getString("idPaslon","0");
+            final String idKategori = extra.getString("idKategori","0");
+
+            try{
+                Call<MessageModel> call = APIService.Factory.create(this).simpanVote(idUser,idKategori,idPaslon);
+                call.enqueue(new Callback<MessageModel>() {
+                    @EverythingIsNonNull
+                    @Override
+                    public void onResponse(Call<MessageModel> call, Response<MessageModel> response) {
+
+                    }
+                    @EverythingIsNonNull
+                    @Override
+                    public void onFailure(Call<MessageModel> call, Throwable t) {
+                        tampilPesan(t.getMessage());
+                    }
+                });
+            }catch (Exception e){
+                e.printStackTrace();
+                tampilPesan(e.getMessage());
+            }
+
+        }
+    }
+
 }

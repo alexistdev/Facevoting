@@ -106,20 +106,31 @@ public class Rekam extends AppCompatActivity {
             Bitmap converetdImage = getResizedBitmap(bitmap, 1024);
 
 
-            /* Rotasi Bitmap */
-            Matrix matrix = new Matrix();
-            matrix.postRotate(270);
-            Bitmap scaledBitmap = Bitmap.createScaledBitmap(converetdImage, mPhoto.getWidth(), mPhoto.getHeight(), true);
-            Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+//            /* Rotasi Bitmap */
+//            Matrix matrix = new Matrix();
+//            matrix.postRotate(270);
+//            Bitmap scaledBitmap = Bitmap.createScaledBitmap(converetdImage, mPhoto.getWidth(), mPhoto.getHeight(), true);
+//            Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+
+//            /* Konversi Bitmap ke byteArray*/
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            rotatedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//            byte[] byteArray = stream.toByteArray();
+//
+//            /*Preview Gambar*/
+//            mPhoto.setImageBitmap(rotatedBitmap);
+//            mCek.setVisibility(View.VISIBLE);
 
             /* Konversi Bitmap ke byteArray*/
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            rotatedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            converetdImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] byteArray = stream.toByteArray();
 
             /*Preview Gambar*/
-            mPhoto.setImageBitmap(rotatedBitmap);
+            mPhoto.setImageBitmap(converetdImage);
             mCek.setVisibility(View.VISIBLE);
+
+
 
             /* Pengaturan Tombol Validasi*/
             mCek.setOnClickListener(v -> {

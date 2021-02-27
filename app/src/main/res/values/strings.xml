@@ -59,6 +59,18 @@
     <string name="validasi4">BACK</string>
     <string name="validasi5">SELAMAT ANDA BERHASIL VALIDASI</string>
 
+    <!--  akun  -->
+    <string name="akun1">Email</string>
+    <string name="akun2">Nama Lengkap</string>
+    <string name="akun3">Identitas ktp/sim/passport</string>
+    <string name="akun4">Password</string>
+    <string name="akun5">Update</string>
+    <string name="akun6">Logout</string>
+
+    <!--  Vote  -->
+    <string name="vote1">gambar logo</string>
+
+
 
 
     <!-- TODO: Remove or change this placeholder text -->
