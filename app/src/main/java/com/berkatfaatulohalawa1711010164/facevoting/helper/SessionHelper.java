@@ -9,13 +9,15 @@ import com.google.gson.Gson;
 
 public class SessionHelper {
 
-    public static boolean login(Context context, String id_user, String token, String validasi){
+    public static boolean login(Context context, String id_user, String token, String validasi, String nama, String identitas){
         SharedPreferences sharedPreferences = context.getSharedPreferences(
                 Constants.USER_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         String jsonUser = new Gson().toJson(id_user);
         editor.putString(Constants.USER_SESSION, jsonUser);
         editor.putString("id_user", id_user);
+        editor.putString("nama_user", nama);
+        editor.putString("identitas", identitas);
         editor.putString("token", token);
         editor.putString("validasi", validasi);
         editor.apply();
@@ -61,5 +63,14 @@ public class SessionHelper {
         } else {
             return false;
         }
+    }
+
+    public static boolean logout(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(
+                Constants.USER_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+        return true;
     }
 }

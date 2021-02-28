@@ -47,6 +47,7 @@ public class Login extends AppCompatActivity {
             Intent intent = new Intent(Login.this, Daftar.class);
             startActivity(intent);
         });
+
         btnLogin.setOnClickListener(v -> {
             String email = txtEmail.getText().toString();
             String password = txtPassword.getText().toString();
@@ -70,7 +71,7 @@ public class Login extends AppCompatActivity {
                     hideLoading();
                     if(response.isSuccessful()){
                         if(response.body() != null){
-                            if (SessionHelper.login(Login.this, response.body().getIdUser(), response.body().getToken_login(),response.body().getValidasi())){
+                            if (SessionHelper.login(Login.this, response.body().getIdUser(), response.body().getToken_login(),response.body().getValidasi(),response.body().getNama(),response.body().getIdentitas())){
                                 Intent intent;
                                 if(response.body().getValidasi().equals("2")){
                                     intent = new Intent(Login.this, Checkpoint.class);

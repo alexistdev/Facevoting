@@ -18,6 +18,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.berkatfaatulohalawa1711010164.facevoting.API.APIService;
@@ -44,6 +45,7 @@ public class home_fragment extends Fragment {
     private ProgressDialog progressDialog;
     private Context mContext;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private TextView mNamaUser, mIdentitasUser;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +53,12 @@ public class home_fragment extends Fragment {
         mContext = getContext();
 
         dataInit(mview);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(
+                Constants.USER_KEY, Context.MODE_PRIVATE);
+        String namaUser = sharedPreferences.getString("nama_user", "");
+        String identitas = sharedPreferences.getString("identitas", "");
+        mNamaUser.setText(namaUser);
+        mIdentitasUser.setText("Identitas : " + identitas);
         setupRecyclerView();
         refresh(mContext);
 
@@ -62,6 +70,8 @@ public class home_fragment extends Fragment {
         return mview;
     }
     private void dataInit(View mview){
+        mNamaUser = mview.findViewById(R.id.txtNama);
+        mIdentitasUser = mview.findViewById(R.id.txtIdentitas);
         gridMenu = mview.findViewById(R.id.rcMenu);
         mSwipeRefreshLayout = mview.findViewById(R.id.refresh);
         progressDialog = new ProgressDialog(getContext());

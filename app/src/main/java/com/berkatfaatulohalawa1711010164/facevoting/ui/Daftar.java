@@ -73,7 +73,7 @@ public class Daftar extends AppCompatActivity {
                             hideLoading();
                             if(response.isSuccessful()){
                                 if(response.body() !=null) {
-                                    if (SessionHelper.login(Daftar.this, response.body().getId_user(), response.body().getToken_login(), response.body().getValidasi())) {
+                                    if (SessionHelper.login(Daftar.this, response.body().getId_user(), response.body().getToken_login(),response.body().getValidasi(),response.body().getNama(),response.body().getIdentitas())) {
                                         Intent intent = new Intent(Daftar.this, Checkpoint.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);

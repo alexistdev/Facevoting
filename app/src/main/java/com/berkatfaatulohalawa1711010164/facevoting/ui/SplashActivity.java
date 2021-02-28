@@ -73,7 +73,7 @@ public class SplashActivity extends AppCompatActivity {
                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
                     if(response.isSuccessful()) {
                         if (response.body() != null) {
-                            SessionHelper.login(SplashActivity.this, response.body().getIdUser(), response.body().getToken_login(),response.body().getValidasi());
+                            SessionHelper.login(SplashActivity.this, response.body().getIdUser(), response.body().getToken_login(),response.body().getValidasi(),response.body().getNama(),response.body().getIdentitas());
                         }
                     }
                 }

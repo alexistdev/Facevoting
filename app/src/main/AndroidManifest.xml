@@ -28,7 +28,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FaceVoting"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.Landing"></activity>
+        <activity android:name=".ui.Detailhasil"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/ThemeNoActionBar"
+            />
+        <activity android:name=".ui.Landing" />
         <activity android:name=".ui.Rekam" />
         <activity android:name=".ui.validasi" />
         <activity

@@ -5,11 +5,13 @@ import android.content.Context;
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants;
 import com.berkatfaatulohalawa1711010164.facevoting.model.AkunModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.LoginModel;
+import com.berkatfaatulohalawa1711010164.facevoting.model.MenuModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.MessageModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.PaslonModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.UserModel;
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetMenu;
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetPaslon;
+import com.berkatfaatulohalawa1711010164.facevoting.response.GetPerolehan;
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetVote;
 
 import java.util.concurrent.TimeUnit;
@@ -32,6 +34,13 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface APIService {
+    @GET("api/Suara/perolehan")
+    Call<GetPerolehan> tampilSuara(@Query("id_kategori") String id_kategori);
+
+    @GET("api/Kategori/semua")
+    Call<GetMenu> tampilHasil();
+
+
     @GET("api/Suara/tampil/{id_user}")
     Call<GetVote> tampilVote(@Path("id_user") String id_user);
 

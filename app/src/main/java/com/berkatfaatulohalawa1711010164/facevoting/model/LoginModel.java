@@ -9,11 +9,18 @@ public class LoginModel {
     private final String token_login;
     @SerializedName("validasi")
     private final String validasi;
+    @SerializedName("nama")
+    private final String nama;
+    @SerializedName("identitas")
+    private final String identitas;
 
-    public LoginModel(String idUser, String token_login, String validasi) {
+
+    public LoginModel(String idUser, String token_login, String validasi, String nama, String identitas) {
         this.idUser = idUser;
         this.token_login = token_login;
         this.validasi = validasi;
+        this.nama = nama;
+        this.identitas = identitas;
     }
 
     public String getIdUser() {
@@ -28,6 +35,11 @@ public class LoginModel {
         return validasi;
     }
 
+    public String getNama() {
+        return nama;
+    }
 
-
+    public String getIdentitas() {
+        return identitas;
+    }
 }

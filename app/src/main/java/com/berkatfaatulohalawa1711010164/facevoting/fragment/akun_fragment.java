@@ -2,6 +2,7 @@ package com.berkatfaatulohalawa1711010164.facevoting.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -20,8 +21,10 @@ import com.berkatfaatulohalawa1711010164.facevoting.API.NoConnectivityException;
 import com.berkatfaatulohalawa1711010164.facevoting.R;
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants;
 import com.berkatfaatulohalawa1711010164.facevoting.helper.ErrorHelper;
+import com.berkatfaatulohalawa1711010164.facevoting.helper.SessionHelper;
 import com.berkatfaatulohalawa1711010164.facevoting.model.AkunModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.ErrorModel;
+import com.berkatfaatulohalawa1711010164.facevoting.ui.Login;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +53,18 @@ public class akun_fragment extends Fragment {
             @Override
             public void onClick(View v) {
                 updateUser(idUser);
+            }
+        });
+        mLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SessionHelper.logout(getContext());
+                Intent intent = new Intent(getActivity(), Login.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                if(getActivity()!= null){
+                    getActivity().finish();
+                }
             }
         });
         return myview;
@@ -140,6 +155,7 @@ public class akun_fragment extends Fragment {
         mNik = view.findViewById(R.id.txtIdentitas);
         mPassword = view.findViewById(R.id.txtPassword);
         mEdit = view.findViewById(R.id.btnEdit);
+        mLogout = view.findViewById(R.id.btnLogout);
         pDialog = new ProgressDialog(getContext());
         pDialog.setCancelable(false);
         pDialog.setMessage("Loading.....");
