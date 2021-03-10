@@ -11,12 +11,15 @@ public class AkunModel {
     private String nama;
     @SerializedName("identitas")
     private String identitas;
+    @SerializedName("status_akun")
+    private String status_akun;
 
-    public AkunModel(String id_user, String email, String nama, String identitas) {
+    public AkunModel(String id_user, String email, String nama, String identitas, String status_akun) {
         this.id_user = id_user;
         this.email = email;
         this.nama = nama;
         this.identitas = identitas;
+        this.status_akun = status_akun;
     }
 
     public String getId_user() {
@@ -33,5 +36,9 @@ public class AkunModel {
 
     public String getIdentitas() {
         return identitas;
+    }
+
+    public String getStatus_akun() {
+        return status_akun;
     }
 }

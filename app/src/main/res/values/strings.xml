@@ -1,6 +1,6 @@
 <resources>
     <!--  Aplikasi  -->
-    <string name="app_name">FaceVoting V.1.0</string>
+    <string name="app_name">FaceVoting</string>
     <string name="logo_app">Logo FaceVoting</string>
     <!--  SplashActivity  -->
     <string name="splash1">START</string>

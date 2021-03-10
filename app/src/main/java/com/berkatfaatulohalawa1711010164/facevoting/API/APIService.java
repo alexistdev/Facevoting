@@ -34,6 +34,9 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface APIService {
+    @GET("api/Login/cekstatus")
+    Call<LoginModel> cekStatus(@Query("id_user") String id_user);
+
     @GET("api/Suara/perolehan")
     Call<GetPerolehan> tampilSuara(@Query("id_kategori") String id_kategori);
 
@@ -53,7 +56,6 @@ public interface APIService {
 
     @GET("api/Akun/tampil")
     Call<AkunModel> tampilAKun(@Query("id_user") String id_user);
-
 
 
     @FormUrlEncoded

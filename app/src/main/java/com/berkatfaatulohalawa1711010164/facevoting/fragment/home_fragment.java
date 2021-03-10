@@ -4,15 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -20,18 +17,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.berkatfaatulohalawa1711010164.facevoting.API.APIService;
 import com.berkatfaatulohalawa1711010164.facevoting.API.NoConnectivityException;
 import com.berkatfaatulohalawa1711010164.facevoting.R;
 import com.berkatfaatulohalawa1711010164.facevoting.adapter.MenuAdapter;
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants;
+import com.berkatfaatulohalawa1711010164.facevoting.model.LoginModel;
 import com.berkatfaatulohalawa1711010164.facevoting.model.MenuModel;
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetMenu;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,12 +48,10 @@ public class home_fragment extends Fragment {
         mContext = getContext();
 
         dataInit(mview);
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(
                 Constants.USER_KEY, Context.MODE_PRIVATE);
-        String namaUser = sharedPreferences.getString("nama_user", "");
-        String identitas = sharedPreferences.getString("identitas", "");
-        mNamaUser.setText(namaUser);
-        mIdentitasUser.setText("Identitas : " + identitas);
+        String idUser = sharedPreferences.getString("id_user", "");
+        getIdentitas(idUser);
         setupRecyclerView();
         refresh(mContext);
 
@@ -86,6 +79,40 @@ public class home_fragment extends Fragment {
         refresh(mContext);
         menuAdapter.notifyDataSetChanged();
     }
+
+    public void getIdentitas(String idUser)
+    {
+        try {
+            Call<LoginModel> call = APIService.Factory.create(mContext).cekStatus(idUser);
+            call.enqueue(new Callback<LoginModel>() {
+                @EverythingIsNonNull
+                @Override
+                public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
+                    hideLoading();
+                    if(response.isSuccessful()){
+                        if(response.body() != null){
+                            String namaUser = response.body().getNama();
+                            String identitas = response.body().getIdentitas();
+                            mNamaUser.setText(namaUser);
+                            mIdentitasUser.setText("Identitas : " + identitas);
+                        }
+                    }
+                }
+                @EverythingIsNonNull
+                @Override
+                public void onFailure(Call<LoginModel> call, Throwable t) {
+                    hideLoading();
+                    if(t instanceof NoConnectivityException) {
+                        displayExceptionMessage("Offline, cek koneksi internet anda!");
+                    }
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+            displayExceptionMessage(e.getMessage());
+        }
+    }
+
 
     public void refresh(Context mContext) {
         try {
@@ -126,13 +153,14 @@ public class home_fragment extends Fragment {
                 }
             });
         } catch (Exception e) {
+            hideLoading();
             e.printStackTrace();
             displayExceptionMessage(e.getMessage());
         }
     }
     private void setupRecyclerView() {
         if(this.getContext() != null){
-            menuAdapter = new MenuAdapter(mContext,new ArrayList<MenuModel>());
+            menuAdapter = new MenuAdapter(mContext,new ArrayList<>());
             gridMenu.setHasFixedSize(true);
             gridMenu.setLayoutManager(new GridLayoutManager(getContext(),2));
             gridMenu.setAdapter(menuAdapter);
