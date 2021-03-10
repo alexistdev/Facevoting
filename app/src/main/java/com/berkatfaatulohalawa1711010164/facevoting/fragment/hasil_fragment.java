@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,16 +38,18 @@ public class hasil_fragment extends Fragment {
     private HasilAdapter hasilAdapter;
     private List<MenuModel> daftarMenu;
     private ProgressDialog progressDialog;
+    private Toolbar toolbar;
     private Context mContext;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_hasil_fragment, container, false);
-
-        if(getActivity() != null){
-            getActivity().setTitle("Riwayat Pengajuan");
-        }
         dataInit(view);
+        if(getActivity() != null){
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            activity.setSupportActionBar(toolbar);
+            toolbar.setTitle("Hasil Pemilu");
+        }
         setupRecyclerView();
         setData(getContext());
 
@@ -81,6 +85,7 @@ public class hasil_fragment extends Fragment {
     }
 
     private void dataInit(View mview){
+        toolbar = mview.findViewById(R.id.toolbarHasil);
         hasilView = mview.findViewById(R.id.rcHasil);
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setCancelable(false);

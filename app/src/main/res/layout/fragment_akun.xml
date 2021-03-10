@@ -7,9 +7,18 @@
     android:orientation="vertical"
     android:background="@color/grey"
     tools:context=".fragment.akun_fragment">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarAkun"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bgUtama"
+        app:subtitleTextColor="@color/white"
+        app:titleTextColor="@color/white"
+        android:minHeight="?attr/actionBarSize"/>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/layoutForm"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="80dp"
         android:layout_marginBottom="80dp"
         android:layout_width="match_parent"
         android:layout_marginStart="16dp"

@@ -3,8 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".fragment.hasil_fragment">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarHasil"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bgUtama"
+        app:subtitleTextColor="@color/white"
+        app:titleTextColor="@color/white"
+        android:minHeight="?attr/actionBarSize"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcHasil"
@@ -12,7 +21,7 @@
         android:layout_marginEnd="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="70dp"
         android:layout_marginBottom="80dp"/>
 
 </FrameLayout>

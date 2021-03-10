@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -35,19 +37,24 @@ import retrofit2.internal.EverythingIsNonNull;
 public class akun_fragment extends Fragment {
     private ProgressDialog pDialog;
     private EditText mEmail,mNama,mNik,mPassword;
+    private Toolbar toolbar;
     private Button mEdit,mLogout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View myview = inflater.inflate(R.layout.fragment_akun, container, false);
+        setData(myview);
         if(getActivity() != null){
-            getActivity().setTitle("Setting");
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            activity.setSupportActionBar(toolbar);
+            toolbar.setTitle("Setting Akun");
         }
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(
                 Constants.USER_KEY, Context.MODE_PRIVATE);
         String idUser = sharedPreferences.getString("id_user", "");
-        View myview = inflater.inflate(R.layout.fragment_akun, container, false);
-        setData(myview);
+
+
         loadData(idUser);
         mEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,6 +156,7 @@ public class akun_fragment extends Fragment {
 
 
     public void setData(View view){
+        toolbar = view.findViewById(R.id.toolbarAkun);
         mEmail = view.findViewById(R.id.txtEmail);
         mEmail.setEnabled(false);
         mNama = view.findViewById(R.id.txtNama);

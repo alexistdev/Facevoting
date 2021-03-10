@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,12 +32,14 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 
 public class votefragment extends Fragment {
     private RecyclerView voteView;
     private VoteAdapter voteAdapter;
     private List<VoteModel> daftarVote;
     private ProgressDialog progressDialog;
+    private Toolbar toolbar;
     private Context mContext;
 
 
@@ -44,10 +48,13 @@ public class votefragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_votefragment, container, false);
 
-        if(getActivity() != null){
-            getActivity().setTitle("Riwayat Pengajuan");
-        }
         dataInit(view);
+        if(getActivity() != null){
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            activity.setSupportActionBar(toolbar);
+            toolbar.setTitle("Bukti Pemilihan");
+        }
+
         setupRecyclerView();
         setData(getContext());
 
@@ -62,6 +69,7 @@ public class votefragment extends Fragment {
             String idUser = sharedPreferences.getString("id_user", "");
             Call<GetVote> call = APIService.Factory.create(mContext).tampilVote(idUser);
             call.enqueue(new Callback<GetVote>() {
+                @EverythingIsNonNull
                 @Override
                 public void onResponse(Call<GetVote> call, Response<GetVote> response) {
                     hideLoading();
@@ -70,7 +78,7 @@ public class votefragment extends Fragment {
                         voteAdapter.replaceData(daftarVote);
                     }
                 }
-
+                @EverythingIsNonNull
                 @Override
                 public void onFailure(Call<GetVote> call, Throwable t) {
                     hideLoading();
@@ -101,6 +109,7 @@ public class votefragment extends Fragment {
 
 
     private void dataInit(View mview){
+        toolbar = mview.findViewById(R.id.toolbarVote);
         voteView = mview.findViewById(R.id.rcVote);
 //        mSwipeRefreshLayout = mview.findViewById(R.id.refresh);
 
