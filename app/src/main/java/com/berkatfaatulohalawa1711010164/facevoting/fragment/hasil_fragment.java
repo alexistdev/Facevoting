@@ -59,6 +59,7 @@ public class hasil_fragment extends Fragment {
         tampilLoading();
         try{
             Call<GetMenu> call = APIService.Factory.create(mContext).tampilHasil();
+
             call.enqueue(new Callback<GetMenu>() {
                 @Override
                 public void onResponse(Call<GetMenu> call, Response<GetMenu> response) {
