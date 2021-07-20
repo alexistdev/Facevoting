@@ -1,5 +1,5 @@
-<h1>Aplikasi Aerotravel</h1>
-Ini adalah Aplikasi untuk Tour And Travel untuk booking system berbasis android dan webservice dengan codeigniter:</br><br>
+<h1>Aplikasi Facevoting</h1>
+Ini adalah Aplikasi validasi dengan deteksi wajah untuk verifikasi voting di kampus:</br><br>
 <img src="https://i.postimg.cc/141gs1n7/splashactivity.png" alt="facevoting" />
 <img src="https://i.postimg.cc/TwhCFFDW/deteksi-wajah.png" alt="facevoting" />
 <img src="https://i.postimg.cc/YC3R9MNW/voting.png" alt="facevoting" />
