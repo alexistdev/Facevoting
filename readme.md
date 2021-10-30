@@ -9,6 +9,7 @@ Detail:<br>
 	<li>Codeigniter 3.1.11 http://codeigniter.com/download</li>
 	<li>Codeigniter-RestServer 3.1 : https://github.com/chriskacerguis/codeigniter-restserver</li>
 	<li>Adminlte 3.0.5 :https://adminlte.io/</li>	
+	<li>Image Processing Facexapi : https://www.facexapi.com</li>
 </ul>
 </br></br>
 Cara Instalasi:</br>
