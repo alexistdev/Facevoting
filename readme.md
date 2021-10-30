@@ -19,4 +19,15 @@ Cara Instalasi:</br>
 5. buka postman dan jalankan http://localhost/Facevoting/api/</br>
 6. Buka File yang ada di subfolder "android" dengan android studio<br>
 7. pada bagian config.java , lakukan pengaturan sesuai dengan localhost atau url web hosting <br>
-
+8. Buat akun di : https://www.facexapi.com dan dapatkan API KEY nya.<br>
+9. Buka Controller/api/Gambar.php dan cek pada method _banding(). <br>Masukkan api pada bagian:<br>
+<pre>
+$headers[] = 'User_id: 603f05b94e6c5e6c15c171e7';
+</pre>
+10. ganti url dibawah menjadi base_url() masih di method _banding():<br>
+<br>
+<pre>$post = array(
+			'img_1' => 'http://facevoting.xyz/gambar/user/'.$photoAwal,
+			'img_2' => 'http://facevoting.xyz/gambar/user/'.$photoPembanding
+		);
+		</pre>
