@@ -9,7 +9,7 @@ Detail:<br>
 	<li>Codeigniter 3.1.11 http://codeigniter.com/download</li>
 	<li>Codeigniter-RestServer 3.1 : https://github.com/chriskacerguis/codeigniter-restserver</li>
 	<li>Adminlte 3.0.5 :https://adminlte.io/</li>	
-	<li>Image Processing Facexapi : https://www.facexapi.com</li>
+	<li>Image Processing Facex : https://facex.io/</li>
 </ul>
 </br></br>
 Cara Instalasi:</br>
@@ -20,7 +20,7 @@ Cara Instalasi:</br>
 5. buka postman dan jalankan http://localhost/Facevoting/api/</br>
 6. Buka File yang ada di subfolder "android" dengan android studio<br>
 7. pada bagian config.java , lakukan pengaturan sesuai dengan localhost atau url web hosting <br>
-8. Buat akun di : https://www.facexapi.com dan dapatkan API KEY nya.<br>
+8. Buat akun di : https://facex.io/ dan dapatkan API KEY nya.<br>
 9. Buka Controller/api/Gambar.php dan cek pada method _banding(). <br>Masukkan api pada bagian:<br>
 <pre>
 $headers[] = 'User_id: 603f05b94e6c5e6c15c171e7';
