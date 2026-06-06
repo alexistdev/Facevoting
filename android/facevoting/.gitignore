@@ -1,0 +1,27 @@
+# Gradle build cache and wrapper downloads
+.gradle/
+build/
+
+# Local configuration (machine-specific SDK path)
+local.properties
+
+# Android Studio / IntelliJ project files
+*.iml
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/deploymentTargetDropDown.xml
+.idea/AndroidProjectSystem.xml
+
+# macOS metadata
+.DS_Store
+
+# Keystore files — never commit signing keys
+*.jks
+*.keystore
+
+# Release APKs — built artifacts don't belong in source control
+app/release/

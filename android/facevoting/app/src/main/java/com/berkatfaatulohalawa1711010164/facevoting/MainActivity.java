@@ -39,19 +39,15 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomMenu);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             Fragment fragment;
-            switch (item.getItemId()) {
-                case R.id.home_menu:
-                    fragment = new home_fragment();
-                    break;
-                case R.id.vote_menu:
-                    fragment = new votefragment();
-                    break;
-                case R.id.hasil_menu:
-                    fragment = new hasil_fragment();
-                    break;
-                default:
-                    fragment = new akun_fragment();
-                    break;
+            int id = item.getItemId();
+            if (id == R.id.home_menu) {
+                fragment = new home_fragment();
+            } else if (id == R.id.vote_menu) {
+                fragment = new votefragment();
+            } else if (id == R.id.hasil_menu) {
+                fragment = new hasil_fragment();
+            } else {
+                fragment = new akun_fragment();
             }
             return loadFragment(fragment);
         });
