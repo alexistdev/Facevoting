@@ -6,7 +6,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity
@@ -22,11 +22,12 @@ class Login : AppCompatActivity() {
     private lateinit var btnDaftar: TextView
     private lateinit var progressDialog: AlertDialog
 
-    private val viewModel: AuthViewModel by viewModels()
+    private lateinit var viewModel: AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         init()
         if (SessionHelper.sudahLogin(this)) {
             if (SessionHelper.sudahValidasi(this)) {

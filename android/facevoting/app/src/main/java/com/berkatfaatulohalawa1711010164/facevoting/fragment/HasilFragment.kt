@@ -8,8 +8,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.berkatfaatulohalawa1711010164.facevoting.R
@@ -17,13 +17,18 @@ import com.berkatfaatulohalawa1711010164.facevoting.adapter.HasilAdapter
 import com.berkatfaatulohalawa1711010164.facevoting.core.Resource
 import com.berkatfaatulohalawa1711010164.facevoting.viewmodel.HasilViewModel
 
-class hasil_fragment : Fragment() {
+class HasilFragment : Fragment() {
     private lateinit var hasilView: RecyclerView
     private lateinit var hasilAdapter: HasilAdapter
     private lateinit var progressDialog: AlertDialog
     private lateinit var toolbar: Toolbar
 
-    private val viewModel: HasilViewModel by viewModels()
+    private lateinit var viewModel: HasilViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[HasilViewModel::class.java]
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_hasil_fragment, container, false)

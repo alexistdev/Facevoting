@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -21,7 +21,7 @@ import com.berkatfaatulohalawa1711010164.facevoting.core.Constants
 import com.berkatfaatulohalawa1711010164.facevoting.core.Resource
 import com.berkatfaatulohalawa1711010164.facevoting.viewmodel.HomeViewModel
 
-class home_fragment : Fragment() {
+class HomeFragment : Fragment() {
     private lateinit var gridMenu: RecyclerView
     private lateinit var menuAdapter: MenuAdapter
     private lateinit var progressDialog: AlertDialog
@@ -29,7 +29,12 @@ class home_fragment : Fragment() {
     private lateinit var mNamaUser: TextView
     private lateinit var mIdentitasUser: TextView
 
-    private val viewModel: HomeViewModel by viewModels()
+    private lateinit var viewModel: HomeViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val mview = inflater.inflate(R.layout.fragment_home, container, false)

@@ -7,10 +7,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.berkatfaatulohalawa1711010164.facevoting.core.Constants
-import com.berkatfaatulohalawa1711010164.facevoting.fragment.akun_fragment
-import com.berkatfaatulohalawa1711010164.facevoting.fragment.hasil_fragment
-import com.berkatfaatulohalawa1711010164.facevoting.fragment.home_fragment
-import com.berkatfaatulohalawa1711010164.facevoting.fragment.votefragment
+import com.berkatfaatulohalawa1711010164.facevoting.fragment.AkunFragment
+import com.berkatfaatulohalawa1711010164.facevoting.fragment.HasilFragment
+import com.berkatfaatulohalawa1711010164.facevoting.fragment.HomeFragment
+import com.berkatfaatulohalawa1711010164.facevoting.fragment.VoteFragment
 import com.berkatfaatulohalawa1711010164.facevoting.ui.Checkpoint
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -25,14 +25,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, Checkpoint::class.java))
             finish()
         }
-        loadFragment(home_fragment())
+        loadFragment(HomeFragment())
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomMenu)
         bottomNavigationView.setOnItemSelectedListener { item ->
             val fragment: Fragment = when (item.itemId) {
-                R.id.home_menu -> home_fragment()
-                R.id.vote_menu -> votefragment()
-                R.id.hasil_menu -> hasil_fragment()
-                else -> akun_fragment()
+                R.id.home_menu -> HomeFragment()
+                R.id.vote_menu -> VoteFragment()
+                R.id.hasil_menu -> HasilFragment()
+                else -> AkunFragment()
             }
             loadFragment(fragment)
         }

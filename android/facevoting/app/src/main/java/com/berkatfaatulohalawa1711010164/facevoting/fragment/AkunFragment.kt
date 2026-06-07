@@ -12,7 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.core.Constants
 import com.berkatfaatulohalawa1711010164.facevoting.core.Resource
@@ -21,7 +21,7 @@ import com.berkatfaatulohalawa1711010164.facevoting.ui.Login
 import com.berkatfaatulohalawa1711010164.facevoting.viewmodel.AkunViewModel
 import android.content.Context
 
-class akun_fragment : Fragment() {
+class AkunFragment : Fragment() {
     private lateinit var pDialog: AlertDialog
     private lateinit var mEmail: EditText
     private lateinit var mNama: EditText
@@ -31,7 +31,12 @@ class akun_fragment : Fragment() {
     private lateinit var mEdit: Button
     private lateinit var mLogout: Button
 
-    private val viewModel: AkunViewModel by viewModels()
+    private lateinit var viewModel: AkunViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[AkunViewModel::class.java]
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val myview = inflater.inflate(R.layout.fragment_akun, container, false)
@@ -88,9 +93,11 @@ class akun_fragment : Fragment() {
         }
         mLogout.setOnClickListener {
             SessionHelper.logout(context)
-            startActivity(Intent(activity, Login::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            })
+            startActivity(
+                Intent(activity, Login::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                },
+            )
             activity?.finish()
         }
         return myview
