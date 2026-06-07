@@ -1,12 +1,12 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity
@@ -27,7 +27,7 @@ class Daftar : AppCompatActivity() {
     private lateinit var txtIdentitas: EditText
     private lateinit var txtEmail: EditText
     private lateinit var txtPassword: EditText
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var progressDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +47,12 @@ class Daftar : AppCompatActivity() {
 
     private fun proses() {
         tampilLoading()
-        val nama_lengkap = txtNama.text.toString()
+        val namaLengkap = txtNama.text.toString()
         val identitas = txtIdentitas.text.toString()
         val email = txtEmail.text.toString()
         val password = txtPassword.text.toString()
-        val token_firebase = MyFirebaseMessagingService.getToken(applicationContext)
-        if (nama_lengkap.isEmpty() || identitas.isEmpty() || email.isEmpty() || password.isEmpty()) {
+        val tokenFirebase = MyFirebaseMessagingService.getToken(applicationContext)
+        if (namaLengkap.isEmpty() || identitas.isEmpty() || email.isEmpty() || password.isEmpty()) {
             hideLoading()
             tampilPesan("Semua kolom harus diisi !")
         } else if (!cekEmail(email)) {
@@ -61,7 +61,7 @@ class Daftar : AppCompatActivity() {
         } else {
             try {
                 APIService.create(applicationContext)
-                    .daftarUser(nama_lengkap, identitas, email, password, token_firebase)
+                    .daftarUser(namaLengkap, identitas, email, password, tokenFirebase)
                     .enqueue(object : Callback<UserModel> {
                         override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
                             hideLoading()
@@ -93,11 +93,11 @@ class Daftar : AppCompatActivity() {
 
     private fun cekEmail(email: String): Boolean =
         Pattern.compile(
-            "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@" +
+            "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]|[\\w-]{2,}))@" +
             "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?" +
             "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\." +
             "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?" +
-            "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|" +
+            "[0-9]{1,2}|25[0-5]|2[0-4][0-9]))|" +
             "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$"
         ).matcher(email).matches()
 
@@ -111,13 +111,13 @@ class Daftar : AppCompatActivity() {
         txtIdentitas = findViewById(R.id.ed_identitas)
         txtEmail = findViewById(R.id.ed_email)
         txtPassword = findViewById(R.id.ed_password)
-        progressDialog = ProgressDialog(this).apply {
-            setCancelable(false)
-            setMessage("Loading.....")
-        }
+        progressDialog = AlertDialog.Builder(this)
+            .setMessage("Loading.....")
+            .setCancelable(false)
+            .create()
     }
 
-    fun tampilPesan(pesan: String) {
+    private fun tampilPesan(pesan: String) {
         Toast.makeText(applicationContext, pesan, Toast.LENGTH_LONG).show()
     }
 }

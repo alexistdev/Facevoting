@@ -1,12 +1,11 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui
 
-import android.annotation.SuppressLint
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.berkatfaatulohalawa1711010164.facevoting.R
@@ -15,7 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
 class Detailpaslon : AppCompatActivity() {
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var progressDialog: AlertDialog
     private lateinit var toolbar: Toolbar
     private lateinit var mNamaKetua: TextView
     private lateinit var mNamaWakil: TextView
@@ -24,13 +23,8 @@ class Detailpaslon : AppCompatActivity() {
     private lateinit var mProfilKetua: TextView
     private lateinit var mProfilWakil: TextView
     private lateinit var mCoblos: Button
-
-    companion object {
-        @SuppressLint("StaticFieldLeak")
-        private lateinit var mPhotoKetua: ImageView
-        @SuppressLint("StaticFieldLeak")
-        private lateinit var mPhotoWakil: ImageView
-    }
+    private lateinit var mPhotoKetua: ImageView
+    private lateinit var mPhotoWakil: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +63,7 @@ class Detailpaslon : AppCompatActivity() {
                 .into(mPhotoWakil)
             progressDialog.dismiss()
             mCoblos.setOnClickListener {
-                startActivity(Intent(this, validasi::class.java).apply {
+                startActivity(Intent(this, Validasi::class.java).apply {
                     putExtra("idPaslon", idPaslon)
                     putExtra("idKategori", idKategori)
                 })
@@ -79,7 +73,11 @@ class Detailpaslon : AppCompatActivity() {
     }
 
     private fun init() {
-        progressDialog = ProgressDialog.show(this, "", "Loading.....", true, false)
+        progressDialog = AlertDialog.Builder(this)
+            .setMessage("Loading.....")
+            .setCancelable(false)
+            .create()
+        progressDialog.show()
         toolbar = findViewById(R.id.toolbarmenu)
         mNamaKetua = findViewById(R.id.txt_ketua)
         mNamaWakil = findViewById(R.id.txt_wakil)

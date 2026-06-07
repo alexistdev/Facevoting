@@ -1,24 +1,24 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui
 
-import android.app.ProgressDialog
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.BuildConfig
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity
 import com.berkatfaatulohalawa1711010164.facevoting.R
+import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
 import com.berkatfaatulohalawa1711010164.facevoting.helper.ErrorHelper
 import com.berkatfaatulohalawa1711010164.facevoting.model.MessageModel
@@ -34,17 +34,15 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.core.graphics.scale
 
-class validasi : AppCompatActivity() {
+class Validasi : AppCompatActivity() {
     private lateinit var mPhoto: ImageView
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var progressDialog: AlertDialog
     private lateinit var mRekam: Button
     private lateinit var mCek: Button
+    private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private var currentPhotoPath: String = ""
-
-    companion object {
-        private const val REQUEST_IMAGE_CAPTURE = 101
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,57 +52,50 @@ class validasi : AppCompatActivity() {
     }
 
     private fun dispatchTakePictureIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (takePictureIntent.resolveActivity(packageManager) != null) {
-            val photoFile: File? = try { createImageFile() } catch (ex: IOException) { null }
-            photoFile?.let {
-                val photoURI: Uri = FileProvider.getUriForFile(
-                    applicationContext,
-                    BuildConfig.APPLICATION_ID + ".provider",
-                    it
-                )
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-            }
-        }
+        val photoFile: File = try { createImageFile() } catch (_: IOException) { return }
+        val photoUri = FileProvider.getUriForFile(
+            applicationContext,
+            BuildConfig.APPLICATION_ID + ".provider",
+            photoFile
+        )
+        cameraLauncher.launch(photoUri)
     }
 
-    fun init() {
-        progressDialog = ProgressDialog(this).apply {
-            setCancelable(false)
-            setMessage("Loading.....")
-        }
+    private fun init() {
+        progressDialog = AlertDialog.Builder(this)
+            .setMessage("Loading.....")
+            .setCancelable(false)
+            .create()
         mPhoto = findViewById(R.id.photo)
         mRekam = findViewById(R.id.btnRekam)
         mCek = findViewById(R.id.btnCek)
         mRekam.visibility = View.VISIBLE
         mCek.visibility = View.GONE
-    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (!success) return@registerForActivityResult
+
+            val bmOptions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            BitmapFactory.decodeFile(currentPhotoPath, bmOptions)
             val targetW = mPhoto.width
             val targetH = mPhoto.height
-            val bmOptions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-            val photoW = bmOptions.outWidth
-            val photoH = bmOptions.outHeight
-            val scaleFactor = minOf(photoW / targetW, photoH / targetH)
+            val scaleFactor = minOf(bmOptions.outWidth / targetW, bmOptions.outHeight / targetH)
             bmOptions.inJustDecodeBounds = false
             bmOptions.inSampleSize = scaleFactor
-            val bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions)
-            val converetdImage = getResizedBitmap(bitmap, 1024)
 
+            val bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions)
+            val convertedImage = getResizedBitmap(bitmap)
             val stream = ByteArrayOutputStream()
-            converetdImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            convertedImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
             val byteArray = stream.toByteArray()
 
-            mPhoto.setImageBitmap(converetdImage)
+            mPhoto.setImageBitmap(convertedImage)
             mCek.visibility = View.VISIBLE
 
             mCek.setOnClickListener {
                 tampilLoading()
-                val myId = applicationContext.getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
+                val myId = applicationContext
+                    .getSharedPreferences(Constants.USER_KEY, MODE_PRIVATE)
                     .getString("id_user", null)
                 val idUser = RequestBody.create(MediaType.parse("multipart/form-data"), myId ?: "")
                 val requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), byteArray)
@@ -118,15 +109,15 @@ class validasi : AppCompatActivity() {
                                 response.body()?.let { body ->
                                     when (body.message) {
                                         "match" -> {
-                                            simpan_suara(myId ?: "")
-                                            startActivity(Intent(this@validasi, Landing::class.java).apply {
+                                            simpanSuara(myId ?: "")
+                                            startActivity(Intent(this@Validasi, Landing::class.java).apply {
                                                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                             })
                                             finish()
                                         }
                                         "no match" -> tampilPesan("Wajah tidak cocok, silahkan ulangi pengambilan gambar")
                                         else -> {
-                                            startActivity(Intent(this@validasi, MainActivity::class.java).apply {
+                                            startActivity(Intent(this@Validasi, MainActivity::class.java).apply {
                                                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                             })
                                             finish()
@@ -149,14 +140,14 @@ class validasi : AppCompatActivity() {
 
     private fun createImageFile(): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val imageFileName = "JPEG_${timeStamp}_"
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(imageFileName, ".png", storageDir).also {
+        return File.createTempFile("JPEG_${timeStamp}_", ".png", storageDir).also {
             currentPhotoPath = it.absolutePath
         }
     }
 
-    fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap {
+    private fun getResizedBitmap(image: Bitmap): Bitmap {
+        val maxSize = 1024
         var width = image.width
         var height = image.height
         val bitmapRatio = width.toFloat() / height.toFloat()
@@ -167,17 +158,17 @@ class validasi : AppCompatActivity() {
             height = maxSize
             width = (height * bitmapRatio).toInt()
         }
-        return Bitmap.createScaledBitmap(image, width, height, true)
+        return image.scale(width, height)
     }
 
-    fun tampilPesan(pesan: String) {
+    private fun tampilPesan(pesan: String) {
         Toast.makeText(applicationContext, pesan, Toast.LENGTH_LONG).show()
     }
 
     private fun tampilLoading() { if (!progressDialog.isShowing) progressDialog.show() }
     private fun hideLoading() { if (progressDialog.isShowing) progressDialog.dismiss() }
 
-    private fun simpan_suara(idUser: String) {
+    private fun simpanSuara(idUser: String) {
         val extra = intent.extras ?: return
         val idPaslon = extra.getString("idPaslon", "0") ?: "0"
         val idKategori = extra.getString("idKategori", "0") ?: "0"

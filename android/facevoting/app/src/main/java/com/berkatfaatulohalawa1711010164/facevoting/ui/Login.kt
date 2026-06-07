@@ -1,12 +1,12 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity
@@ -23,7 +23,7 @@ class Login : AppCompatActivity() {
     private lateinit var txtPassword: EditText
     private lateinit var btnLogin: ImageView
     private lateinit var btnDaftar: TextView
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var progressDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,14 +42,14 @@ class Login : AppCompatActivity() {
             val email = txtEmail.text.toString()
             val password = txtPassword.text.toString()
             if (email.trim().isNotEmpty() && password.trim().isNotEmpty()) {
-                cek_login(email, password)
+                cekLogin(email, password)
             } else {
                 tampilPesan("Semua kolom harus diisi!")
             }
         }
     }
 
-    private fun cek_login(email: String, password: String) {
+    private fun cekLogin(email: String, password: String) {
         tampilLoading()
         try {
             APIService.create(applicationContext).validasiLogin(email, password)
@@ -85,11 +85,11 @@ class Login : AppCompatActivity() {
         }
     }
 
-    fun init() {
-        progressDialog = ProgressDialog(this).apply {
-            setCancelable(false)
-            setMessage("Loading.....")
-        }
+    private fun init() {
+        progressDialog = AlertDialog.Builder(this)
+            .setMessage("Loading.....")
+            .setCancelable(false)
+            .create()
         btnLogin = findViewById(R.id.btn_login)
         btnDaftar = findViewById(R.id.tbl_daftar)
         txtEmail = findViewById(R.id.ed_email)
@@ -99,7 +99,7 @@ class Login : AppCompatActivity() {
     private fun tampilLoading() { if (!progressDialog.isShowing) progressDialog.show() }
     private fun hideLoading() { if (progressDialog.isShowing) progressDialog.dismiss() }
 
-    fun tampilPesan(pesan: String) {
+    private fun tampilPesan(pesan: String) {
         Toast.makeText(applicationContext, pesan, Toast.LENGTH_LONG).show()
     }
 }

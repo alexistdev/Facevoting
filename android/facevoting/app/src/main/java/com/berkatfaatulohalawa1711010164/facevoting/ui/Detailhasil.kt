@@ -1,9 +1,9 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui
 
-import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +19,7 @@ import retrofit2.Response
 
 class Detailhasil : AppCompatActivity() {
     private lateinit var suaraView: RecyclerView
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var progressDialog: AlertDialog
     private lateinit var suaraAdapter: SuaraAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +38,7 @@ class Detailhasil : AppCompatActivity() {
         setData(idKategori)
     }
 
-    fun setData(idKategori: String) {
+    private fun setData(idKategori: String) {
         tampilLoading()
         try {
             APIService.create(this).tampilSuara(idKategori)
@@ -63,10 +63,10 @@ class Detailhasil : AppCompatActivity() {
 
     private fun dataInit() {
         suaraView = findViewById(R.id.rcSuara)
-        progressDialog = ProgressDialog(this).apply {
-            setCancelable(false)
-            setMessage("Loading.....")
-        }
+        progressDialog = AlertDialog.Builder(this)
+            .setMessage("Loading.....")
+            .setCancelable(false)
+            .create()
     }
 
     private fun setupRecyclerView() {
@@ -82,7 +82,7 @@ class Detailhasil : AppCompatActivity() {
     private fun tampilLoading() { if (!progressDialog.isShowing) progressDialog.show() }
     private fun hideLoading() { if (progressDialog.isShowing) progressDialog.dismiss() }
 
-    fun tampilPesan(pesan: String) {
+    private fun tampilPesan(pesan: String) {
         Toast.makeText(this, pesan, Toast.LENGTH_LONG).show()
     }
 }

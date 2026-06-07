@@ -1,8 +1,8 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui
 
-import android.app.ProgressDialog
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +19,7 @@ import retrofit2.Response
 class Paslon : AppCompatActivity() {
     private lateinit var gridView: RecyclerView
     private lateinit var paslonAdapter: PaslonAdapter
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var progressDialog: AlertDialog
     private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +38,11 @@ class Paslon : AppCompatActivity() {
     }
 
     private fun init() {
-        progressDialog = ProgressDialog.show(this, "", "Loading.....", true, false)
+        progressDialog = AlertDialog.Builder(this)
+            .setMessage("Loading.....")
+            .setCancelable(false)
+            .create()
+        progressDialog.show()
         gridView = findViewById(R.id.rcPaslon)
         toolbar = findViewById(R.id.toolbarmenu)
     }
@@ -71,7 +75,7 @@ class Paslon : AppCompatActivity() {
         }
     }
 
-    fun displayExceptionMessage(msg: String) {
+    private fun displayExceptionMessage(msg: String) {
         Toast.makeText(applicationContext, msg, Toast.LENGTH_LONG).show()
     }
 }

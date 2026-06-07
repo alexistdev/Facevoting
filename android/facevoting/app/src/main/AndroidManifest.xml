@@ -36,7 +36,7 @@
             android:name=".ui.WelcomeActivity"
             android:theme="@style/ThemeNoActionBar" />
         <activity android:name=".ui.Rekam" />
-        <activity android:name=".ui.validasi" />
+        <activity android:name=".ui.Validasi" />
         <activity
             android:name=".ui.Detailpaslon"
             android:parentActivityName=".MainActivity"

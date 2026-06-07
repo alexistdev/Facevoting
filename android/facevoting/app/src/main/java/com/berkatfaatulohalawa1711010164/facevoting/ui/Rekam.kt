@@ -1,6 +1,5 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -8,23 +7,25 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.BuildConfig
 import com.berkatfaatulohalawa1711010164.facevoting.R
+import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
 import com.berkatfaatulohalawa1711010164.facevoting.helper.ErrorHelper
 import com.berkatfaatulohalawa1711010164.facevoting.helper.SessionHelper
 import com.berkatfaatulohalawa1711010164.facevoting.model.MessageModel
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,9 +38,10 @@ import java.util.Locale
 
 class Rekam : AppCompatActivity() {
     private lateinit var mPhoto: ImageView
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var progressDialog: AlertDialog
     private lateinit var mRekam: Button
     private lateinit var mCek: Button
+    private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private var currentPhotoPath: String = ""
 
     companion object {
@@ -54,60 +56,53 @@ class Rekam : AppCompatActivity() {
     }
 
     private fun dispatchTakePictureIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (takePictureIntent.resolveActivity(packageManager) != null) {
-            val photoFile: File? = try { createImageFile() } catch (ex: IOException) { null }
-            photoFile?.let {
-                val photoURI: Uri = FileProvider.getUriForFile(
-                    applicationContext,
-                    BuildConfig.APPLICATION_ID + ".provider",
-                    it
-                )
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-            }
-        }
+        val photoFile: File = try { createImageFile() } catch (ex: IOException) { return }
+        val photoUri = FileProvider.getUriForFile(
+            applicationContext,
+            BuildConfig.APPLICATION_ID + ".provider",
+            photoFile
+        )
+        cameraLauncher.launch(photoUri)
     }
 
-    fun init() {
-        progressDialog = ProgressDialog(this).apply {
-            setCancelable(false)
-            setMessage("Loading.....")
-        }
+    private fun init() {
+        progressDialog = AlertDialog.Builder(this)
+            .setMessage("Loading.....")
+            .setCancelable(false)
+            .create()
         mPhoto = findViewById(R.id.photo)
         mRekam = findViewById(R.id.btnRekam)
         mCek = findViewById(R.id.btnCek)
         mRekam.visibility = View.VISIBLE
         mCek.visibility = View.GONE
-    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (!success) return@registerForActivityResult
+
+            val bmOptions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            BitmapFactory.decodeFile(currentPhotoPath, bmOptions)
             val targetW = mPhoto.width
             val targetH = mPhoto.height
-            val bmOptions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-            val photoW = bmOptions.outWidth
-            val photoH = bmOptions.outHeight
-            val scaleFactor = minOf(photoW / targetW, photoH / targetH)
+            val scaleFactor = minOf(bmOptions.outWidth / targetW, bmOptions.outHeight / targetH)
             bmOptions.inJustDecodeBounds = false
             bmOptions.inSampleSize = scaleFactor
-            val bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions)
-            val converetdImage = getResizedBitmap(bitmap, 1024)
 
+            val bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions)
+            val convertedImage = getResizedBitmap(bitmap, 1024)
             val stream = ByteArrayOutputStream()
-            converetdImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            convertedImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
             val byteArray = stream.toByteArray()
 
-            mPhoto.setImageBitmap(converetdImage)
+            mPhoto.setImageBitmap(convertedImage)
             mCek.visibility = View.VISIBLE
 
             mCek.setOnClickListener {
                 tampilLoading()
-                val myId = applicationContext.getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
+                val myId = applicationContext
+                    .getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
                     .getString("id_user", null)
-                val idUser = RequestBody.create(MediaType.parse("multipart/form-data"), myId ?: "")
-                val requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), byteArray)
+                val idUser = (myId ?: "").toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val requestBody = byteArray.toRequestBody("application/octet-stream".toMediaTypeOrNull())
                 val filePart = MultipartBody.Part.createFormData("upload", currentPhotoPath, requestBody)
                 APIService.create(applicationContext).rekamWajah(idUser, filePart)
                     .enqueue(object : Callback<MessageModel> {
@@ -135,14 +130,13 @@ class Rekam : AppCompatActivity() {
 
     private fun createImageFile(): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val imageFileName = "JPEG_${timeStamp}_"
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(imageFileName, ".png", storageDir).also {
+        return File.createTempFile("JPEG_${timeStamp}_", ".png", storageDir).also {
             currentPhotoPath = it.absolutePath
         }
     }
 
-    fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap {
+    private fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap {
         var width = image.width
         var height = image.height
         val bitmapRatio = width.toFloat() / height.toFloat()
@@ -156,7 +150,7 @@ class Rekam : AppCompatActivity() {
         return Bitmap.createScaledBitmap(image, width, height, true)
     }
 
-    fun tampilPesan(pesan: String) {
+    private fun tampilPesan(pesan: String) {
         Toast.makeText(applicationContext, pesan, Toast.LENGTH_LONG).show()
     }
 

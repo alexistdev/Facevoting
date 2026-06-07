@@ -1,12 +1,11 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui
 
-import android.app.ProgressDialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.api.NoConnectivityException
@@ -23,7 +22,7 @@ import retrofit2.Response
 class Checkpoint : AppCompatActivity() {
     private lateinit var btnLanjut: ImageView
     private lateinit var btnRekam: ImageView
-    private lateinit var pDialog: ProgressDialog
+    private lateinit var pDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +35,7 @@ class Checkpoint : AppCompatActivity() {
             btnLanjut.visibility = View.INVISIBLE
             btnRekam.visibility = View.VISIBLE
         }
-        btnLanjut.setOnClickListener { check_status() }
+        btnLanjut.setOnClickListener { checkStatus() }
         btnRekam.setOnClickListener {
             startActivity(Intent(this, Rekam::class.java))
             finish()
@@ -48,16 +47,16 @@ class Checkpoint : AppCompatActivity() {
         btnRekam = findViewById(R.id.btnRekam)
         btnRekam.visibility = View.INVISIBLE
         btnLanjut.visibility = View.INVISIBLE
-        pDialog = ProgressDialog(this).apply {
-            setCancelable(false)
-            setMessage("Loading.....")
-        }
+        pDialog = AlertDialog.Builder(this)
+            .setMessage("Loading.....")
+            .setCancelable(false)
+            .create()
     }
 
-    fun check_status() {
+    private fun checkStatus() {
         showDialog()
         try {
-            val idUser = applicationContext.getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
+            val idUser = applicationContext.getSharedPreferences(Constants.USER_KEY, MODE_PRIVATE)
                 .getString("id_user", "") ?: ""
             APIService.create(this).cekStatus(idUser)
                 .enqueue(object : Callback<LoginModel> {
@@ -89,7 +88,7 @@ class Checkpoint : AppCompatActivity() {
     private fun showDialog() { if (!pDialog.isShowing) pDialog.show() }
     private fun hideDialog() { if (pDialog.isShowing) pDialog.dismiss() }
 
-    fun tampilPesan(msg: String) {
+    private fun tampilPesan(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 }
