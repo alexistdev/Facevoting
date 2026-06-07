@@ -11,8 +11,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.berkatfaatulohalawa1711010164.facevoting.API.APIService
-import com.berkatfaatulohalawa1711010164.facevoting.API.NoConnectivityException
+import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
+import com.berkatfaatulohalawa1711010164.facevoting.api.NoConnectivityException
 import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.adapter.HasilAdapter
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetMenu
@@ -42,7 +42,7 @@ class hasil_fragment : Fragment() {
     fun setData() {
         tampilLoading()
         try {
-            APIService.Factory.create(context).tampilHasil()
+            APIService.create(context).tampilHasil()
                 .enqueue(object : Callback<GetMenu> {
                     override fun onResponse(call: Call<GetMenu>, response: Response<GetMenu>) {
                         hideLoading()

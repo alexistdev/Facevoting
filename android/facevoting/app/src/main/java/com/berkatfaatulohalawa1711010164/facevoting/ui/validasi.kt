@@ -15,7 +15,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import com.berkatfaatulohalawa1711010164.facevoting.API.APIService
+import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.BuildConfig
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity
 import com.berkatfaatulohalawa1711010164.facevoting.R
@@ -110,7 +110,7 @@ class validasi : AppCompatActivity() {
                 val requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), byteArray)
                 val filePart = MultipartBody.Part.createFormData("upload", currentPhotoPath, requestBody)
 
-                APIService.Factory.create(applicationContext).cekWajah(idUser, filePart)
+                APIService.create(applicationContext).cekWajah(idUser, filePart)
                     .enqueue(object : Callback<MessageModel> {
                         override fun onResponse(call: Call<MessageModel>, response: Response<MessageModel>) {
                             hideLoading()
@@ -182,7 +182,7 @@ class validasi : AppCompatActivity() {
         val idPaslon = extra.getString("idPaslon", "0") ?: "0"
         val idKategori = extra.getString("idKategori", "0") ?: "0"
         try {
-            APIService.Factory.create(this).simpanVote(idUser, idKategori, idPaslon)
+            APIService.create(this).simpanVote(idUser, idKategori, idPaslon)
                 .enqueue(object : Callback<MessageModel> {
                     override fun onResponse(call: Call<MessageModel>, response: Response<MessageModel>) {}
                     override fun onFailure(call: Call<MessageModel>, t: Throwable) {

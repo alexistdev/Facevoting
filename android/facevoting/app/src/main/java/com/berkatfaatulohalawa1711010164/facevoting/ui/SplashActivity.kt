@@ -1,13 +1,13 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.berkatfaatulohalawa1711010164.facevoting.API.APIService
-import com.berkatfaatulohalawa1711010164.facevoting.API.NoConnectivityException
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
+import com.berkatfaatulohalawa1711010164.facevoting.api.NoConnectivityException
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity
 import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
@@ -20,12 +20,13 @@ import retrofit2.Response
 class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        val prefs = applicationContext.getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
+        val prefs = applicationContext.getSharedPreferences(Constants.USER_KEY, MODE_PRIVATE)
         if (SessionHelper.sudahLogin(this)) {
             val idUser = prefs.getString("id_user", "") ?: ""
-            get_status(idUser)
+            getStatus(idUser)
             val valds = prefs.getString("validasi", "")
             if (valds == "2") {
                 startActivity(Intent(this, Checkpoint::class.java))
@@ -39,9 +40,9 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    private fun get_status(idUser: String) {
+    private fun getStatus(idUser: String) {
         try {
-            APIService.Factory.create(applicationContext).dapatstatus(idUser)
+            APIService.create(applicationContext).dapatStatus(idUser)
                 .enqueue(object : Callback<LoginModel> {
                     override fun onResponse(call: Call<LoginModel>, response: Response<LoginModel>) {
                         if (response.isSuccessful) {
@@ -62,7 +63,7 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val prefs = applicationContext.getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
+        val prefs = applicationContext.getSharedPreferences(Constants.USER_KEY, MODE_PRIVATE)
         if (SessionHelper.sudahLogin(this)) {
             val valds = prefs.getString("validasi", "")
             if (valds == "2") {

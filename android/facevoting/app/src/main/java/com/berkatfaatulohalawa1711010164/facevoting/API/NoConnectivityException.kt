@@ -1,4 +1,4 @@
-package com.berkatfaatulohalawa1711010164.facevoting.API
+package com.berkatfaatulohalawa1711010164.facevoting.api
 
 import java.io.IOException
 

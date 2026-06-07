@@ -15,7 +15,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import com.berkatfaatulohalawa1711010164.facevoting.API.APIService
+import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.BuildConfig
 import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
@@ -109,7 +109,7 @@ class Rekam : AppCompatActivity() {
                 val idUser = RequestBody.create(MediaType.parse("multipart/form-data"), myId ?: "")
                 val requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), byteArray)
                 val filePart = MultipartBody.Part.createFormData("upload", currentPhotoPath, requestBody)
-                APIService.Factory.create(applicationContext).rekamWajah(idUser, filePart)
+                APIService.create(applicationContext).rekamWajah(idUser, filePart)
                     .enqueue(object : Callback<MessageModel> {
                         override fun onResponse(call: Call<MessageModel>, response: Response<MessageModel>) {
                             hideLoading()

@@ -12,8 +12,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.berkatfaatulohalawa1711010164.facevoting.API.APIService
-import com.berkatfaatulohalawa1711010164.facevoting.API.NoConnectivityException
+import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
+import com.berkatfaatulohalawa1711010164.facevoting.api.NoConnectivityException
 import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.adapter.VoteAdapter
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
@@ -46,7 +46,7 @@ class votefragment : Fragment() {
         try {
             val idUser = requireActivity().getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
                 .getString("id_user", "") ?: ""
-            APIService.Factory.create(mContext).tampilVote(idUser)
+            APIService.create(mContext).tampilVote(idUser)
                 .enqueue(object : Callback<GetVote> {
                     override fun onResponse(call: Call<GetVote>, response: Response<GetVote>) {
                         hideLoading()

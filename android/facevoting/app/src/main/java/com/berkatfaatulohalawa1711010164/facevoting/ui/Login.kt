@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.berkatfaatulohalawa1711010164.facevoting.API.APIService
+import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity
 import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.helper.ErrorHelper
@@ -52,7 +52,7 @@ class Login : AppCompatActivity() {
     private fun cek_login(email: String, password: String) {
         tampilLoading()
         try {
-            APIService.Factory.create(applicationContext).validasiLogin(email, password)
+            APIService.create(applicationContext).validasiLogin(email, password)
                 .enqueue(object : Callback<LoginModel> {
                     override fun onResponse(call: Call<LoginModel>, response: Response<LoginModel>) {
                         hideLoading()

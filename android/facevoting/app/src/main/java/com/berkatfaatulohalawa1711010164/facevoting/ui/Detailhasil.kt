@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.berkatfaatulohalawa1711010164.facevoting.API.APIService
-import com.berkatfaatulohalawa1711010164.facevoting.API.NoConnectivityException
+import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
+import com.berkatfaatulohalawa1711010164.facevoting.api.NoConnectivityException
 import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.adapter.SuaraAdapter
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetPerolehan
@@ -41,7 +41,7 @@ class Detailhasil : AppCompatActivity() {
     fun setData(idKategori: String) {
         tampilLoading()
         try {
-            APIService.Factory.create(this).tampilSuara(idKategori)
+            APIService.create(this).tampilSuara(idKategori)
                 .enqueue(object : Callback<GetPerolehan> {
                     override fun onResponse(call: Call<GetPerolehan>, response: Response<GetPerolehan>) {
                         hideLoading()

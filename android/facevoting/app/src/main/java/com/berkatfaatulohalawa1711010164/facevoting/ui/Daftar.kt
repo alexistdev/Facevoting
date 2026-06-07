@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.berkatfaatulohalawa1711010164.facevoting.API.APIService
+import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity
 import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.helper.ErrorHelper
@@ -60,7 +60,7 @@ class Daftar : AppCompatActivity() {
             tampilPesan("Email tidak valid !")
         } else {
             try {
-                APIService.Factory.create(applicationContext)
+                APIService.create(applicationContext)
                     .daftarUser(nama_lengkap, identitas, email, password, token_firebase)
                     .enqueue(object : Callback<UserModel> {
                         override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {

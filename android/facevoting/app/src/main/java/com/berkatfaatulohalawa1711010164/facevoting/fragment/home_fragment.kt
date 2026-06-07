@@ -14,8 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.berkatfaatulohalawa1711010164.facevoting.API.APIService
-import com.berkatfaatulohalawa1711010164.facevoting.API.NoConnectivityException
+import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
+import com.berkatfaatulohalawa1711010164.facevoting.api.NoConnectivityException
 import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.adapter.MenuAdapter
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
@@ -73,7 +73,7 @@ class home_fragment : Fragment() {
 
     fun getIdentitas(idUser: String) {
         try {
-            APIService.Factory.create(mContext).cekStatus(idUser)
+            APIService.create(mContext).cekStatus(idUser)
                 .enqueue(object : Callback<LoginModel> {
                     override fun onResponse(call: Call<LoginModel>, response: Response<LoginModel>) {
                         hideLoading()
@@ -100,7 +100,7 @@ class home_fragment : Fragment() {
             tampilLoading()
             val idUser = requireActivity().getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
                 .getString("id_user", "") ?: ""
-            APIService.Factory.create(mContext).listMenu(idUser)
+            APIService.create(mContext).listMenu(idUser)
                 .enqueue(object : Callback<GetMenu> {
                     override fun onResponse(call: Call<GetMenu>, response: Response<GetMenu>) {
                         hideLoading()

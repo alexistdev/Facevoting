@@ -1,4 +1,4 @@
-package com.berkatfaatulohalawa1711010164.facevoting.API
+package com.berkatfaatulohalawa1711010164.facevoting.api
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -18,6 +18,6 @@ internal class NetworkConnectionInterceptor(private val mContext: Context?) : In
     fun isConnected(): Boolean {
         val connectivityManager = mContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val netInfo = connectivityManager.activeNetworkInfo
-        return netInfo != null && netInfo.isConnected
+        return (netInfo != null && netInfo.isConnected)
     }
 }

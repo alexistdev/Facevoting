@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import com.berkatfaatulohalawa1711010164.facevoting.API.APIService
+import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
 import com.berkatfaatulohalawa1711010164.facevoting.helper.ErrorHelper
@@ -66,7 +66,7 @@ class akun_fragment : Fragment() {
         } else {
             showDialog()
             try {
-                APIService.Factory.create(context).updateAkun(idUser, nama, identitas, password)
+                APIService.create(context).updateAkun(idUser, nama, identitas, password)
                     .enqueue(object : Callback<AkunModel> {
                         override fun onResponse(call: Call<AkunModel>, response: Response<AkunModel>) {
                             if (response.isSuccessful) {
@@ -96,7 +96,7 @@ class akun_fragment : Fragment() {
     fun loadData(idUser: String) {
         showDialog()
         try {
-            APIService.Factory.create(context).tampilAKun(idUser)
+            APIService.create(context).tampilAkun(idUser)
                 .enqueue(object : Callback<AkunModel> {
                     override fun onResponse(call: Call<AkunModel>, response: Response<AkunModel>) {
                         if (response.isSuccessful) {

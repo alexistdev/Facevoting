@@ -1,4 +1,4 @@
-package com.berkatfaatulohalawa1711010164.facevoting.API
+package com.berkatfaatulohalawa1711010164.facevoting.api
 
 import android.content.Context
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
@@ -29,35 +29,35 @@ import java.util.concurrent.TimeUnit
 
 interface APIService {
     @GET("api/Login/cekstatus")
-    fun cekStatus(@Query("id_user") id_user: String): Call<LoginModel>
+    fun cekStatus(@Query("id_user") idUser: String): Call<LoginModel>
 
     @GET("api/Suara/perolehan")
-    fun tampilSuara(@Query("id_kategori") id_kategori: String): Call<GetPerolehan>
+    fun tampilSuara(@Query("id_kategori") idKategori: String): Call<GetPerolehan>
 
     @GET("api/Kategori/semua")
     fun tampilHasil(): Call<GetMenu>
 
     @GET("api/Suara/tampil/{id_user}")
-    fun tampilVote(@Path("id_user") id_user: String): Call<GetVote>
+    fun tampilVote(@Path("id_user") idUser: String): Call<GetVote>
 
     @FormUrlEncoded
     @PUT("api/Akun/tampil/{id_user}")
     fun updateAkun(
-        @Path("id_user") id_user: String,
+        @Path("id_user") idUser: String,
         @Field("nama") nama: String,
         @Field("identitas") identitas: String,
         @Field("password") password: String
     ): Call<AkunModel>
 
     @GET("api/Akun/tampil")
-    fun tampilAKun(@Query("id_user") id_user: String): Call<AkunModel>
+    fun tampilAkun(@Query("id_user") idUser: String): Call<AkunModel>
 
     @FormUrlEncoded
     @POST("api/Suara/vote")
     fun simpanVote(
-        @Field("id_user") id_user: String,
-        @Field("id_kategori") id_kategori: String,
-        @Field("id_paslon") id_paslon: String
+        @Field("id_user") idUser: String,
+        @Field("id_kategori") idKategori: String,
+        @Field("id_paslon") idPaslon: String
     ): Call<MessageModel>
 
     @Multipart
@@ -76,7 +76,7 @@ interface APIService {
 
     @FormUrlEncoded
     @POST("api/Login/sudahlogin")
-    fun dapatstatus(@Field("id_user") id_user: String): Call<LoginModel>
+    fun dapatStatus(@Field("id_user") idUser: String): Call<LoginModel>
 
     @FormUrlEncoded
     @POST("api/Login/otentikasi")
@@ -92,17 +92,17 @@ interface APIService {
         @Field("identitas") identitas: String,
         @Field("email") email: String,
         @Field("password") password: String,
-        @Field("token_firebase") token_firebase: String
+        @Field("token_firebase") tokenFirebase: String
     ): Call<UserModel>
 
     @FormUrlEncoded
     @POST("api/Paslon/tampil")
-    fun postPaslon(@Field("id_kategori") id_kategori: String): Call<GetPaslon>
+    fun postPaslon(@Field("id_kategori") idKategori: String): Call<GetPaslon>
 
     @GET("api/Kategori/tampil")
-    fun listMenu(@Query("id_user") id_user: String): Call<GetMenu>
+    fun listMenu(@Query("id_user") idUser: String): Call<GetMenu>
 
-    companion object Factory {
+    companion object {
         fun create(mContext: Context?): APIService {
             val builder = OkHttpClient.Builder()
                 .readTimeout(20, TimeUnit.SECONDS)

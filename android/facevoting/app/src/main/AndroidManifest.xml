@@ -60,7 +60,7 @@
         <activity
             android:name=".ui.SplashActivity"
             android:exported="true"
-            android:theme="@style/ThemeNoActionBar">
+            android:theme="@style/Theme.FaceVoting.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
