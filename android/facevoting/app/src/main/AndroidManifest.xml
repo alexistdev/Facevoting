@@ -32,6 +32,9 @@
             android:theme="@style/ThemeNoActionBar"
             />
         <activity android:name=".ui.Landing" />
+        <activity
+            android:name=".ui.WelcomeActivity"
+            android:theme="@style/ThemeNoActionBar" />
         <activity android:name=".ui.Rekam" />
         <activity android:name=".ui.validasi" />
         <activity

@@ -1,28 +1,26 @@
 package com.berkatfaatulohalawa1711010164.facevoting.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.api.NoConnectivityException
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity
-import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
 import com.berkatfaatulohalawa1711010164.facevoting.helper.SessionHelper
 import com.berkatfaatulohalawa1711010164.facevoting.model.LoginModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
         val prefs = applicationContext.getSharedPreferences(Constants.USER_KEY, MODE_PRIVATE)
         if (SessionHelper.sudahLogin(this)) {
             val idUser = prefs.getString("id_user", "") ?: ""
@@ -33,11 +31,10 @@ class SplashActivity : AppCompatActivity() {
             } else {
                 startActivity(Intent(this, MainActivity::class.java))
             }
-            finish()
+        } else {
+            startActivity(Intent(this, WelcomeActivity::class.java))
         }
-        findViewById<TextView>(R.id.tombol_start).setOnClickListener {
-            startActivity(Intent(this, preLogin1::class.java))
-        }
+        finish()
     }
 
     private fun getStatus(idUser: String) {
@@ -61,21 +58,7 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        val prefs = applicationContext.getSharedPreferences(Constants.USER_KEY, MODE_PRIVATE)
-        if (SessionHelper.sudahLogin(this)) {
-            val valds = prefs.getString("validasi", "")
-            if (valds == "2") {
-                startActivity(Intent(this, Checkpoint::class.java))
-            } else {
-                startActivity(Intent(this, MainActivity::class.java))
-            }
-            finish()
-        }
-    }
-
-    fun displayExceptionMessage(msg: String) {
+    private fun displayExceptionMessage(msg: String) {
         Toast.makeText(applicationContext, msg, Toast.LENGTH_LONG).show()
     }
 }
