@@ -103,7 +103,7 @@ interface APIService {
     fun listMenu(@Query("id_user") id_user: String): Call<GetMenu>
 
     companion object Factory {
-        fun create(mContext: Context): APIService {
+        fun create(mContext: Context?): APIService {
             val builder = OkHttpClient.Builder()
                 .readTimeout(20, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)

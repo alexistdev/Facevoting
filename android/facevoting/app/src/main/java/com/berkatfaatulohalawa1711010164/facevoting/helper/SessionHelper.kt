@@ -3,6 +3,7 @@ package com.berkatfaatulohalawa1711010164.facevoting.helper
 import android.content.Context
 import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
 import com.google.gson.Gson
+import androidx.core.content.edit
 
 object SessionHelper {
     fun login(context: Context, id_user: String, token: String, validasi: String, nama: String, identitas: String): Boolean {
@@ -21,7 +22,7 @@ object SessionHelper {
 
     fun catatrekam(context: Context): Boolean {
         context.getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
-            .edit().putString("crekam", "sudah").apply()
+            .edit { putString("crekam", "sudah") }
         return true
     }
 
@@ -40,9 +41,9 @@ object SessionHelper {
             .getString("validasi", null) != null
     }
 
-    fun logout(context: Context): Boolean {
-        context.getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
-            .edit().clear().apply()
+    fun logout(context: Context?): Boolean {
+        context?.getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
+            ?.edit()?.clear()?.apply()
         return true
     }
 }

@@ -8,7 +8,9 @@ import java.lang.annotation.Annotation
 object ErrorHelper {
     fun parseError(response: Response<*>): ErrorModel {
         val converter = ServiceError.retrofit
-            .responseBodyConverter<ErrorModel>(ErrorModel::class.java, arrayOfNulls<Annotation>(0))
+            .responseBodyConverter<ErrorModel>(ErrorModel::class.java,
+	            arrayOfNulls<Annotation>(0) as Array<out kotlin.Annotation?>
+            )
         return try {
             if (response.errorBody() != null) {
                 converter.convert(response.errorBody()!!) ?: ErrorModel("error")
