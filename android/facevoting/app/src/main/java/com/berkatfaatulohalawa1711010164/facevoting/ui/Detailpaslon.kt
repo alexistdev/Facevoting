@@ -9,7 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.berkatfaatulohalawa1711010164.facevoting.R
-import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
+import com.berkatfaatulohalawa1711010164.facevoting.core.Constants
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 

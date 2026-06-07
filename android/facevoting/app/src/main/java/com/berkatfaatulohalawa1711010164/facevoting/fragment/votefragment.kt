@@ -1,32 +1,31 @@
 package com.berkatfaatulohalawa1711010164.facevoting.fragment
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
-import com.berkatfaatulohalawa1711010164.facevoting.api.NoConnectivityException
 import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.adapter.VoteAdapter
-import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
-import com.berkatfaatulohalawa1711010164.facevoting.response.GetVote
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.berkatfaatulohalawa1711010164.facevoting.core.Constants
+import com.berkatfaatulohalawa1711010164.facevoting.core.Resource
+import com.berkatfaatulohalawa1711010164.facevoting.viewmodel.VoteViewModel
 
 class votefragment : Fragment() {
     private lateinit var voteView: RecyclerView
     private lateinit var voteAdapter: VoteAdapter
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var progressDialog: AlertDialog
     private lateinit var toolbar: Toolbar
+
+    private val viewModel: VoteViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_votefragment, container, false)
@@ -37,33 +36,24 @@ class votefragment : Fragment() {
             toolbar.title = "Bukti Pemilihan"
         }
         setupRecyclerView()
-        setData(context)
-        return view
-    }
+        val idUser = requireActivity().getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
+            .getString("id_user", "") ?: ""
+        viewModel.loadVotes(idUser)
 
-    fun setData(mContext: Context?) {
-        tampilLoading()
-        try {
-            val idUser = requireActivity().getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
-                .getString("id_user", "") ?: ""
-            APIService.create(mContext).tampilVote(idUser)
-                .enqueue(object : Callback<GetVote> {
-                    override fun onResponse(call: Call<GetVote>, response: Response<GetVote>) {
-                        hideLoading()
-                        if (response.isSuccessful) {
-                            response.body()?.listVote?.let { voteAdapter.replaceData(it) }
-                        }
-                    }
-                    override fun onFailure(call: Call<GetVote>, t: Throwable) {
-                        hideLoading()
-                        if (t is NoConnectivityException) tampilPesan("Offline, cek koneksi internet anda!")
-                    }
-                })
-        } catch (e: Exception) {
-            hideLoading()
-            e.printStackTrace()
-            tampilPesan(e.message ?: "")
+        viewModel.voteState.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> showLoading()
+                is Resource.Success -> {
+                    hideLoading()
+                    resource.data.listVote?.let { voteAdapter.replaceData(it) }
+                }
+                is Resource.Error -> {
+                    hideLoading()
+                    showToast(resource.message)
+                }
+            }
         }
+        return view
     }
 
     private fun setupRecyclerView() {
@@ -79,16 +69,13 @@ class votefragment : Fragment() {
     private fun dataInit(mview: View) {
         toolbar = mview.findViewById(R.id.toolbarVote)
         voteView = mview.findViewById(R.id.rcVote)
-        progressDialog = ProgressDialog(context).apply {
-            setCancelable(false)
-            setMessage("Loading.....")
-        }
+        progressDialog = AlertDialog.Builder(requireContext())
+            .setMessage("Loading.....")
+            .setCancelable(false)
+            .create()
     }
 
-    private fun tampilLoading() { if (!progressDialog.isShowing) progressDialog.show() }
+    private fun showLoading() { if (!progressDialog.isShowing) progressDialog.show() }
     private fun hideLoading() { if (progressDialog.isShowing) progressDialog.dismiss() }
-
-    fun tampilPesan(pesan: String) {
-        Toast.makeText(context, pesan, Toast.LENGTH_LONG).show()
-    }
+    private fun showToast(msg: String) { Toast.makeText(context, msg, Toast.LENGTH_LONG).show() }
 }

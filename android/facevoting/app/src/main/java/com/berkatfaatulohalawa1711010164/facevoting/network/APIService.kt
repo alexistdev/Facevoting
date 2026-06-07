@@ -1,7 +1,5 @@
-package com.berkatfaatulohalawa1711010164.facevoting.api
+package com.berkatfaatulohalawa1711010164.facevoting.network
 
-import android.content.Context
-import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
 import com.berkatfaatulohalawa1711010164.facevoting.model.AkunModel
 import com.berkatfaatulohalawa1711010164.facevoting.model.LoginModel
 import com.berkatfaatulohalawa1711010164.facevoting.model.MessageModel
@@ -11,11 +9,8 @@ import com.berkatfaatulohalawa1711010164.facevoting.response.GetPaslon
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetPerolehan
 import com.berkatfaatulohalawa1711010164.facevoting.response.GetVote
 import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -25,7 +20,6 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.util.concurrent.TimeUnit
 
 interface APIService {
     @GET("api/Login/cekstatus")
@@ -101,24 +95,4 @@ interface APIService {
 
     @GET("api/Kategori/tampil")
     fun listMenu(@Query("id_user") idUser: String): Call<GetMenu>
-
-    companion object {
-        fun create(mContext: Context?): APIService {
-            val builder = OkHttpClient.Builder()
-                .readTimeout(20, TimeUnit.SECONDS)
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .writeTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(NetworkConnectionInterceptor(mContext))
-
-            val client = builder.build()
-
-            val retrofit = Retrofit.Builder()
-                .baseUrl(Constants.URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-
-            return retrofit.create(APIService::class.java)
-        }
-    }
 }

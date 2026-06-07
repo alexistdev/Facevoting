@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.berkatfaatulohalawa1711010164.facevoting.R
-import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
+import com.berkatfaatulohalawa1711010164.facevoting.core.Constants
 import com.berkatfaatulohalawa1711010164.facevoting.model.SuaraModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions

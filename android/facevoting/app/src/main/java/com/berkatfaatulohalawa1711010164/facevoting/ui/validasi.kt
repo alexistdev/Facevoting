@@ -12,29 +12,27 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.core.graphics.scale
 import com.berkatfaatulohalawa1711010164.facevoting.BuildConfig
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity
 import com.berkatfaatulohalawa1711010164.facevoting.R
-import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
-import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
-import com.berkatfaatulohalawa1711010164.facevoting.helper.ErrorHelper
-import com.berkatfaatulohalawa1711010164.facevoting.model.MessageModel
-import okhttp3.MediaType
+import com.berkatfaatulohalawa1711010164.facevoting.core.Constants
+import com.berkatfaatulohalawa1711010164.facevoting.core.Resource
+import com.berkatfaatulohalawa1711010164.facevoting.viewmodel.FaceViewModel
+import com.berkatfaatulohalawa1711010164.facevoting.viewmodel.VoteViewModel
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import androidx.core.graphics.scale
 
 class Validasi : AppCompatActivity() {
     private lateinit var mPhoto: ImageView
@@ -44,11 +42,49 @@ class Validasi : AppCompatActivity() {
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private var currentPhotoPath: String = ""
 
+    private val faceViewModel: FaceViewModel by viewModels()
+    private val voteViewModel: VoteViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_validasi)
         init()
         mRekam.setOnClickListener { dispatchTakePictureIntent() }
+
+        faceViewModel.cekState.observe(this) { resource ->
+            when (resource) {
+                is Resource.Loading -> showLoading()
+                is Resource.Success -> {
+                    hideLoading()
+                    when (resource.data.message) {
+                        "match" -> {
+                            val myId = applicationContext
+                                .getSharedPreferences(Constants.USER_KEY, MODE_PRIVATE)
+                                .getString("id_user", "") ?: ""
+                            val idPaslon = intent.extras?.getString("idPaslon", "0") ?: "0"
+                            val idKategori = intent.extras?.getString("idKategori", "0") ?: "0"
+                            voteViewModel.simpanVote(myId, idKategori, idPaslon)
+                            startActivity(Intent(this, Landing::class.java).apply {
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            })
+                            finish()
+                        }
+                        "no match" -> showToast("Wajah tidak cocok, silahkan ulangi pengambilan gambar")
+                        else -> {
+                            startActivity(Intent(this, MainActivity::class.java).apply {
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            })
+                            finish()
+                            showToast("Ada kesalahan sistem, silahkan dicoba lagi nanti !")
+                        }
+                    }
+                }
+                is Resource.Error -> {
+                    hideLoading()
+                    showToast(resource.message)
+                }
+            }
+        }
     }
 
     private fun dispatchTakePictureIntent() {
@@ -93,47 +129,13 @@ class Validasi : AppCompatActivity() {
             mCek.visibility = View.VISIBLE
 
             mCek.setOnClickListener {
-                tampilLoading()
                 val myId = applicationContext
                     .getSharedPreferences(Constants.USER_KEY, MODE_PRIVATE)
                     .getString("id_user", null)
-                val idUser = RequestBody.create(MediaType.parse("multipart/form-data"), myId ?: "")
-                val requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), byteArray)
+                val idUser = (myId ?: "").toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val requestBody = byteArray.toRequestBody("application/octet-stream".toMediaTypeOrNull())
                 val filePart = MultipartBody.Part.createFormData("upload", currentPhotoPath, requestBody)
-
-                APIService.create(applicationContext).cekWajah(idUser, filePart)
-                    .enqueue(object : Callback<MessageModel> {
-                        override fun onResponse(call: Call<MessageModel>, response: Response<MessageModel>) {
-                            hideLoading()
-                            if (response.isSuccessful) {
-                                response.body()?.let { body ->
-                                    when (body.message) {
-                                        "match" -> {
-                                            simpanSuara(myId ?: "")
-                                            startActivity(Intent(this@Validasi, Landing::class.java).apply {
-                                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                            })
-                                            finish()
-                                        }
-                                        "no match" -> tampilPesan("Wajah tidak cocok, silahkan ulangi pengambilan gambar")
-                                        else -> {
-                                            startActivity(Intent(this@Validasi, MainActivity::class.java).apply {
-                                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                            })
-                                            finish()
-                                            tampilPesan("Ada kesalahan sistem, silahkan dicoba lagi nanti !")
-                                        }
-                                    }
-                                }
-                            } else {
-                                tampilPesan(ErrorHelper.parseError(response).message)
-                            }
-                        }
-                        override fun onFailure(call: Call<MessageModel>, t: Throwable) {
-                            hideLoading()
-                            tampilPesan(t.message ?: "")
-                        }
-                    })
+                faceViewModel.cekWajah(idUser, filePart)
             }
         }
     }
@@ -161,28 +163,7 @@ class Validasi : AppCompatActivity() {
         return image.scale(width, height)
     }
 
-    private fun tampilPesan(pesan: String) {
-        Toast.makeText(applicationContext, pesan, Toast.LENGTH_LONG).show()
-    }
-
-    private fun tampilLoading() { if (!progressDialog.isShowing) progressDialog.show() }
+    private fun showToast(msg: String) { Toast.makeText(applicationContext, msg, Toast.LENGTH_LONG).show() }
+    private fun showLoading() { if (!progressDialog.isShowing) progressDialog.show() }
     private fun hideLoading() { if (progressDialog.isShowing) progressDialog.dismiss() }
-
-    private fun simpanSuara(idUser: String) {
-        val extra = intent.extras ?: return
-        val idPaslon = extra.getString("idPaslon", "0") ?: "0"
-        val idKategori = extra.getString("idKategori", "0") ?: "0"
-        try {
-            APIService.create(this).simpanVote(idUser, idKategori, idPaslon)
-                .enqueue(object : Callback<MessageModel> {
-                    override fun onResponse(call: Call<MessageModel>, response: Response<MessageModel>) {}
-                    override fun onFailure(call: Call<MessageModel>, t: Throwable) {
-                        tampilPesan(t.message ?: "")
-                    }
-                })
-        } catch (e: Exception) {
-            e.printStackTrace()
-            tampilPesan(e.message ?: "")
-        }
-    }
 }

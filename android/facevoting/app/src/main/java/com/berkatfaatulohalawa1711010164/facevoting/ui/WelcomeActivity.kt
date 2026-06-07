@@ -6,8 +6,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity
 import com.berkatfaatulohalawa1711010164.facevoting.R
-import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
-import com.berkatfaatulohalawa1711010164.facevoting.helper.SessionHelper
+import com.berkatfaatulohalawa1711010164.facevoting.core.Constants
+import com.berkatfaatulohalawa1711010164.facevoting.core.SessionHelper
 
 class WelcomeActivity : AppCompatActivity() {
 

@@ -1,6 +1,5 @@
-package com.berkatfaatulohalawa1711010164.facevoting.helper
+package com.berkatfaatulohalawa1711010164.facevoting.core
 
-import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

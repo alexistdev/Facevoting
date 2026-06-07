@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
+import com.berkatfaatulohalawa1711010164.facevoting.core.Constants
 import com.berkatfaatulohalawa1711010164.facevoting.fragment.akun_fragment
 import com.berkatfaatulohalawa1711010164.facevoting.fragment.hasil_fragment
 import com.berkatfaatulohalawa1711010164.facevoting.fragment.home_fragment
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         }
         loadFragment(home_fragment())
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomMenu)
-        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+        bottomNavigationView.setOnItemSelectedListener { item ->
             val fragment: Fragment = when (item.itemId) {
                 R.id.home_menu -> home_fragment()
                 R.id.vote_menu -> votefragment()

@@ -1,7 +1,5 @@
 package com.berkatfaatulohalawa1711010164.facevoting.fragment
 
-import android.app.ProgressDialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,22 +8,21 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
+import androidx.fragment.app.viewModels
 import com.berkatfaatulohalawa1711010164.facevoting.R
-import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
-import com.berkatfaatulohalawa1711010164.facevoting.helper.ErrorHelper
-import com.berkatfaatulohalawa1711010164.facevoting.helper.SessionHelper
-import com.berkatfaatulohalawa1711010164.facevoting.model.AkunModel
+import com.berkatfaatulohalawa1711010164.facevoting.core.Constants
+import com.berkatfaatulohalawa1711010164.facevoting.core.Resource
+import com.berkatfaatulohalawa1711010164.facevoting.core.SessionHelper
 import com.berkatfaatulohalawa1711010164.facevoting.ui.Login
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.berkatfaatulohalawa1711010164.facevoting.viewmodel.AkunViewModel
+import android.content.Context
 
 class akun_fragment : Fragment() {
-    private lateinit var pDialog: ProgressDialog
+    private lateinit var pDialog: AlertDialog
     private lateinit var mEmail: EditText
     private lateinit var mNama: EditText
     private lateinit var mNik: EditText
@@ -33,6 +30,8 @@ class akun_fragment : Fragment() {
     private lateinit var toolbar: Toolbar
     private lateinit var mEdit: Button
     private lateinit var mLogout: Button
+
+    private val viewModel: AkunViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val myview = inflater.inflate(R.layout.fragment_akun, container, false)
@@ -44,83 +43,57 @@ class akun_fragment : Fragment() {
         }
         val idUser = requireActivity().getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
             .getString("id_user", "") ?: ""
-        loadData(idUser)
-        mEdit.setOnClickListener { updateUser(idUser) }
+        viewModel.loadAkun(idUser)
+
+        viewModel.akunState.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> showDialog()
+                is Resource.Success -> {
+                    hideDialog()
+                    mEmail.setText(resource.data.email)
+                    mNama.setText(resource.data.nama)
+                    mNik.setText(resource.data.identitas)
+                }
+                is Resource.Error -> {
+                    hideDialog()
+                    showToast(resource.message)
+                }
+            }
+        }
+
+        viewModel.updateState.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> showDialog()
+                is Resource.Success -> {
+                    hideDialog()
+                    viewModel.loadAkun(idUser)
+                    showToast("Data Akun berhasil diperbaharui!")
+                }
+                is Resource.Error -> {
+                    hideDialog()
+                    showToast(resource.message)
+                }
+            }
+        }
+
+        mEdit.setOnClickListener {
+            val nama = mNama.text.toString()
+            val identitas = mNik.text.toString()
+            val password = mPassword.text.toString()
+            if (nama.isEmpty() || identitas.isEmpty()) {
+                showToast("Silahkan lengkapi form!")
+            } else {
+                viewModel.updateAkun(idUser, nama, identitas, password)
+            }
+        }
         mLogout.setOnClickListener {
             SessionHelper.logout(context)
-            val intent = Intent(activity, Login::class.java).apply {
+            startActivity(Intent(activity, Login::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
-            startActivity(intent)
+            })
             activity?.finish()
         }
         return myview
-    }
-
-    private fun updateUser(idUser: String) {
-        val nama = mNama.text.toString()
-        val identitas = mNik.text.toString()
-        val password = mPassword.text.toString()
-        if (nama.isEmpty() || identitas.isEmpty()) {
-            tampilPesan("Silahkan lengkapi form!")
-        } else {
-            showDialog()
-            try {
-                APIService.create(context).updateAkun(idUser, nama, identitas, password)
-                    .enqueue(object : Callback<AkunModel> {
-                        override fun onResponse(call: Call<AkunModel>, response: Response<AkunModel>) {
-                            if (response.isSuccessful) {
-                                hideDialog()
-                                if (response.body() != null) {
-                                    loadData(idUser)
-                                    tampilPesan("Data Akun berhasil diperbaharui!")
-                                }
-                            } else {
-                                hideDialog()
-                                tampilPesan(ErrorHelper.parseError(response).message)
-                            }
-                        }
-                        override fun onFailure(call: Call<AkunModel>, t: Throwable) {
-                            hideDialog()
-                            tampilPesan(t.message ?: "")
-                        }
-                    })
-            } catch (e: Exception) {
-                hideDialog()
-                e.printStackTrace()
-                tampilPesan(e.message ?: "")
-            }
-        }
-    }
-
-    fun loadData(idUser: String) {
-        showDialog()
-        try {
-            APIService.create(context).tampilAkun(idUser)
-                .enqueue(object : Callback<AkunModel> {
-                    override fun onResponse(call: Call<AkunModel>, response: Response<AkunModel>) {
-                        if (response.isSuccessful) {
-                            hideDialog()
-                            response.body()?.let {
-                                mEmail.setText(it.email)
-                                mNama.setText(it.nama)
-                                mNik.setText(it.identitas)
-                            }
-                        } else {
-                            hideDialog()
-                            tampilPesan(ErrorHelper.parseError(response).message)
-                        }
-                    }
-                    override fun onFailure(call: Call<AkunModel>, t: Throwable) {
-                        hideDialog()
-                        tampilPesan(t.message ?: "")
-                    }
-                })
-        } catch (e: Exception) {
-            hideDialog()
-            e.printStackTrace()
-            tampilPesan(e.message ?: "")
-        }
     }
 
     fun setData(view: View) {
@@ -131,16 +104,13 @@ class akun_fragment : Fragment() {
         mPassword = view.findViewById(R.id.txtPassword)
         mEdit = view.findViewById(R.id.btnEdit)
         mLogout = view.findViewById(R.id.btnLogout)
-        pDialog = ProgressDialog(context).apply {
-            setCancelable(false)
-            setMessage("Loading.....")
-        }
+        pDialog = AlertDialog.Builder(requireContext())
+            .setMessage("Loading.....")
+            .setCancelable(false)
+            .create()
     }
 
     private fun showDialog() { if (!pDialog.isShowing) pDialog.show() }
     private fun hideDialog() { if (pDialog.isShowing) pDialog.dismiss() }
-
-    fun tampilPesan(msg: String) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
-    }
+    private fun showToast(msg: String) { Toast.makeText(context, msg, Toast.LENGTH_LONG).show() }
 }

@@ -1,4 +1,4 @@
-package com.berkatfaatulohalawa1711010164.facevoting.helper
+package com.berkatfaatulohalawa1711010164.facevoting.core
 
 import com.berkatfaatulohalawa1711010164.facevoting.model.ErrorModel
 import retrofit2.Response
@@ -9,7 +9,7 @@ object ErrorHelper {
     fun parseError(response: Response<*>): ErrorModel {
         val converter = ServiceError.retrofit
             .responseBodyConverter<ErrorModel>(ErrorModel::class.java,
-	            arrayOfNulls<Annotation>(0) as Array<out kotlin.Annotation?>
+                arrayOfNulls<Annotation>(0) as Array<out kotlin.Annotation?>
             )
         return try {
             if (response.errorBody() != null) {

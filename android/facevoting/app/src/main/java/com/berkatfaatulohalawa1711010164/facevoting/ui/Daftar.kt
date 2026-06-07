@@ -6,18 +6,15 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity
 import com.berkatfaatulohalawa1711010164.facevoting.R
-import com.berkatfaatulohalawa1711010164.facevoting.helper.ErrorHelper
+import com.berkatfaatulohalawa1711010164.facevoting.core.Resource
+import com.berkatfaatulohalawa1711010164.facevoting.core.SessionHelper
 import com.berkatfaatulohalawa1711010164.facevoting.helper.MyFirebaseMessagingService
-import com.berkatfaatulohalawa1711010164.facevoting.helper.SessionHelper
-import com.berkatfaatulohalawa1711010164.facevoting.model.UserModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.berkatfaatulohalawa1711010164.facevoting.viewmodel.AuthViewModel
 import java.util.regex.Pattern
 
 class Daftar : AppCompatActivity() {
@@ -28,6 +25,8 @@ class Daftar : AppCompatActivity() {
     private lateinit var txtEmail: EditText
     private lateinit var txtPassword: EditText
     private lateinit var progressDialog: AlertDialog
+
+    private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,51 +42,38 @@ class Daftar : AppCompatActivity() {
         }
         btnLogin.setOnClickListener { startActivity(Intent(this, Login::class.java)) }
         btnDaftar.setOnClickListener { proses() }
+
+        viewModel.registerState.observe(this) { resource ->
+            when (resource) {
+                is Resource.Loading -> showLoading()
+                is Resource.Success -> {
+                    hideLoading()
+                    val body = resource.data
+                    SessionHelper.login(this, body.id_user, body.token_login, body.validasi, body.nama, body.identitas)
+                    startActivity(Intent(this, Checkpoint::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    })
+                    finish()
+                }
+                is Resource.Error -> {
+                    hideLoading()
+                    showToast(resource.message)
+                }
+            }
+        }
     }
 
     private fun proses() {
-        tampilLoading()
         val namaLengkap = txtNama.text.toString()
         val identitas = txtIdentitas.text.toString()
         val email = txtEmail.text.toString()
         val password = txtPassword.text.toString()
         val tokenFirebase = MyFirebaseMessagingService.getToken(applicationContext)
-        if (namaLengkap.isEmpty() || identitas.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            hideLoading()
-            tampilPesan("Semua kolom harus diisi !")
-        } else if (!cekEmail(email)) {
-            hideLoading()
-            tampilPesan("Email tidak valid !")
-        } else {
-            try {
-                APIService.create(applicationContext)
-                    .daftarUser(namaLengkap, identitas, email, password, tokenFirebase)
-                    .enqueue(object : Callback<UserModel> {
-                        override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
-                            hideLoading()
-                            if (response.isSuccessful) {
-                                response.body()?.let { body ->
-                                    if (SessionHelper.login(this@Daftar, body.id_user, body.token_login, body.validasi, body.nama, body.identitas)) {
-                                        startActivity(Intent(this@Daftar, Checkpoint::class.java).apply {
-                                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                        })
-                                        finish()
-                                    }
-                                }
-                            } else {
-                                tampilPesan(ErrorHelper.parseError(response).message)
-                            }
-                        }
-                        override fun onFailure(call: Call<UserModel>, t: Throwable) {
-                            hideLoading()
-                            tampilPesan(t.message ?: "")
-                        }
-                    })
-            } catch (e: Exception) {
-                hideLoading()
-                e.printStackTrace()
-                tampilPesan(e.message ?: "")
-            }
+        when {
+            namaLengkap.isEmpty() || identitas.isEmpty() || email.isEmpty() || password.isEmpty() ->
+                showToast("Semua kolom harus diisi !")
+            !cekEmail(email) -> showToast("Email tidak valid !")
+            else -> viewModel.register(namaLengkap, identitas, email, password, tokenFirebase)
         }
     }
 
@@ -100,9 +86,6 @@ class Daftar : AppCompatActivity() {
             "[0-9]{1,2}|25[0-5]|2[0-4][0-9]))|" +
             "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$"
         ).matcher(email).matches()
-
-    private fun tampilLoading() { if (!progressDialog.isShowing) progressDialog.show() }
-    private fun hideLoading() { if (progressDialog.isShowing) progressDialog.dismiss() }
 
     private fun init() {
         btnLogin = findViewById(R.id.tbl_login)
@@ -117,7 +100,7 @@ class Daftar : AppCompatActivity() {
             .create()
     }
 
-    private fun tampilPesan(pesan: String) {
-        Toast.makeText(applicationContext, pesan, Toast.LENGTH_LONG).show()
-    }
+    private fun showLoading() { if (!progressDialog.isShowing) progressDialog.show() }
+    private fun hideLoading() { if (progressDialog.isShowing) progressDialog.dismiss() }
+    private fun showToast(msg: String) { Toast.makeText(applicationContext, msg, Toast.LENGTH_LONG).show() }
 }

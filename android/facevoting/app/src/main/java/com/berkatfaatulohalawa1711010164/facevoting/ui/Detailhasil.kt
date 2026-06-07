@@ -3,24 +3,23 @@ package com.berkatfaatulohalawa1711010164.facevoting.ui
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
-import com.berkatfaatulohalawa1711010164.facevoting.api.NoConnectivityException
 import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.adapter.SuaraAdapter
-import com.berkatfaatulohalawa1711010164.facevoting.response.GetPerolehan
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.berkatfaatulohalawa1711010164.facevoting.core.Resource
+import com.berkatfaatulohalawa1711010164.facevoting.viewmodel.HasilViewModel
 
 class Detailhasil : AppCompatActivity() {
     private lateinit var suaraView: RecyclerView
     private lateinit var progressDialog: AlertDialog
     private lateinit var suaraAdapter: SuaraAdapter
+
+    private val viewModel: HasilViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,29 +34,20 @@ class Detailhasil : AppCompatActivity() {
             it.setDisplayShowTitleEnabled(true)
         }
         val idKategori = intent.extras?.getString("id_kategori", "0") ?: "0"
-        setData(idKategori)
-    }
+        viewModel.loadSuara(idKategori)
 
-    private fun setData(idKategori: String) {
-        tampilLoading()
-        try {
-            APIService.create(this).tampilSuara(idKategori)
-                .enqueue(object : Callback<GetPerolehan> {
-                    override fun onResponse(call: Call<GetPerolehan>, response: Response<GetPerolehan>) {
-                        hideLoading()
-                        if (response.isSuccessful) {
-                            response.body()?.listSuara?.let { suaraAdapter.replaceData(it) }
-                        }
-                    }
-                    override fun onFailure(call: Call<GetPerolehan>, t: Throwable) {
-                        hideLoading()
-                        if (t is NoConnectivityException) tampilPesan("Offline, cek koneksi internet anda!")
-                    }
-                })
-        } catch (e: Exception) {
-            hideLoading()
-            e.printStackTrace()
-            tampilPesan(e.message ?: "")
+        viewModel.suaraState.observe(this) { resource ->
+            when (resource) {
+                is Resource.Loading -> showLoading()
+                is Resource.Success -> {
+                    hideLoading()
+                    resource.data.listSuara?.let { suaraAdapter.replaceData(it) }
+                }
+                is Resource.Error -> {
+                    hideLoading()
+                    Toast.makeText(this, resource.message, Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
 
@@ -79,10 +69,6 @@ class Detailhasil : AppCompatActivity() {
         suaraView.adapter = suaraAdapter
     }
 
-    private fun tampilLoading() { if (!progressDialog.isShowing) progressDialog.show() }
+    private fun showLoading() { if (!progressDialog.isShowing) progressDialog.show() }
     private fun hideLoading() { if (progressDialog.isShowing) progressDialog.dismiss() }
-
-    private fun tampilPesan(pesan: String) {
-        Toast.makeText(this, pesan, Toast.LENGTH_LONG).show()
-    }
 }

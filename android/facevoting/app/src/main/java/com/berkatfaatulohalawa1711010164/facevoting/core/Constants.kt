@@ -1,4 +1,4 @@
-package com.berkatfaatulohalawa1711010164.facevoting.config
+package com.berkatfaatulohalawa1711010164.facevoting.core
 
 object Constants {
     const val URL = "http://facevoting.xyz/"

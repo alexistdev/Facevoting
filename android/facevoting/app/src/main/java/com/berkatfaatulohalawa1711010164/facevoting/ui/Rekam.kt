@@ -13,22 +13,19 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.berkatfaatulohalawa1711010164.facevoting.BuildConfig
 import com.berkatfaatulohalawa1711010164.facevoting.R
-import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
-import com.berkatfaatulohalawa1711010164.facevoting.config.Constants
-import com.berkatfaatulohalawa1711010164.facevoting.helper.ErrorHelper
-import com.berkatfaatulohalawa1711010164.facevoting.helper.SessionHelper
-import com.berkatfaatulohalawa1711010164.facevoting.model.MessageModel
+import com.berkatfaatulohalawa1711010164.facevoting.core.Constants
+import com.berkatfaatulohalawa1711010164.facevoting.core.Resource
+import com.berkatfaatulohalawa1711010164.facevoting.core.SessionHelper
+import com.berkatfaatulohalawa1711010164.facevoting.viewmodel.FaceViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -44,15 +41,31 @@ class Rekam : AppCompatActivity() {
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private var currentPhotoPath: String = ""
 
-    companion object {
-        private const val REQUEST_IMAGE_CAPTURE = 101
-    }
+    private val viewModel: FaceViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rekam)
         init()
         mRekam.setOnClickListener { dispatchTakePictureIntent() }
+
+        viewModel.rekamState.observe(this) { resource ->
+            when (resource) {
+                is Resource.Loading -> showLoading()
+                is Resource.Success -> {
+                    hideLoading()
+                    SessionHelper.catatrekam(this)
+                    startActivity(Intent(this, Checkpoint::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    })
+                    finish()
+                }
+                is Resource.Error -> {
+                    hideLoading()
+                    showToast(resource.message)
+                }
+            }
+        }
     }
 
     private fun dispatchTakePictureIntent() {
@@ -97,33 +110,13 @@ class Rekam : AppCompatActivity() {
             mCek.visibility = View.VISIBLE
 
             mCek.setOnClickListener {
-                tampilLoading()
                 val myId = applicationContext
                     .getSharedPreferences(Constants.USER_KEY, Context.MODE_PRIVATE)
                     .getString("id_user", null)
                 val idUser = (myId ?: "").toRequestBody("multipart/form-data".toMediaTypeOrNull())
                 val requestBody = byteArray.toRequestBody("application/octet-stream".toMediaTypeOrNull())
                 val filePart = MultipartBody.Part.createFormData("upload", currentPhotoPath, requestBody)
-                APIService.create(applicationContext).rekamWajah(idUser, filePart)
-                    .enqueue(object : Callback<MessageModel> {
-                        override fun onResponse(call: Call<MessageModel>, response: Response<MessageModel>) {
-                            hideLoading()
-                            if (response.isSuccessful) {
-                                if (SessionHelper.catatrekam(this@Rekam)) {
-                                    startActivity(Intent(this@Rekam, Checkpoint::class.java).apply {
-                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    })
-                                    finish()
-                                }
-                            } else {
-                                tampilPesan(ErrorHelper.parseError(response).message)
-                            }
-                        }
-                        override fun onFailure(call: Call<MessageModel>, t: Throwable) {
-                            hideLoading()
-                            tampilPesan(t.message ?: "")
-                        }
-                    })
+                viewModel.rekamWajah(idUser, filePart)
             }
         }
     }
@@ -150,10 +143,7 @@ class Rekam : AppCompatActivity() {
         return Bitmap.createScaledBitmap(image, width, height, true)
     }
 
-    private fun tampilPesan(pesan: String) {
-        Toast.makeText(applicationContext, pesan, Toast.LENGTH_LONG).show()
-    }
-
-    private fun tampilLoading() { if (!progressDialog.isShowing) progressDialog.show() }
+    private fun showToast(msg: String) { Toast.makeText(applicationContext, msg, Toast.LENGTH_LONG).show() }
+    private fun showLoading() { if (!progressDialog.isShowing) progressDialog.show() }
     private fun hideLoading() { if (progressDialog.isShowing) progressDialog.dismiss() }
 }

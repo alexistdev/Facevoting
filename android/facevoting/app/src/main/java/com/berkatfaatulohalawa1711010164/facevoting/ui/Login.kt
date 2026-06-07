@@ -6,17 +6,14 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
 import com.berkatfaatulohalawa1711010164.facevoting.MainActivity
 import com.berkatfaatulohalawa1711010164.facevoting.R
-import com.berkatfaatulohalawa1711010164.facevoting.helper.ErrorHelper
-import com.berkatfaatulohalawa1711010164.facevoting.helper.SessionHelper
-import com.berkatfaatulohalawa1711010164.facevoting.model.LoginModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.berkatfaatulohalawa1711010164.facevoting.core.Resource
+import com.berkatfaatulohalawa1711010164.facevoting.core.SessionHelper
+import com.berkatfaatulohalawa1711010164.facevoting.viewmodel.AuthViewModel
 
 class Login : AppCompatActivity() {
     private lateinit var txtEmail: EditText
@@ -24,6 +21,8 @@ class Login : AppCompatActivity() {
     private lateinit var btnLogin: ImageView
     private lateinit var btnDaftar: TextView
     private lateinit var progressDialog: AlertDialog
+
+    private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,46 +41,33 @@ class Login : AppCompatActivity() {
             val email = txtEmail.text.toString()
             val password = txtPassword.text.toString()
             if (email.trim().isNotEmpty() && password.trim().isNotEmpty()) {
-                cekLogin(email, password)
+                viewModel.login(email, password)
             } else {
-                tampilPesan("Semua kolom harus diisi!")
+                showToast("Semua kolom harus diisi!")
             }
         }
-    }
 
-    private fun cekLogin(email: String, password: String) {
-        tampilLoading()
-        try {
-            APIService.create(applicationContext).validasiLogin(email, password)
-                .enqueue(object : Callback<LoginModel> {
-                    override fun onResponse(call: Call<LoginModel>, response: Response<LoginModel>) {
-                        hideLoading()
-                        if (response.isSuccessful) {
-                            response.body()?.let { body ->
-                                if (SessionHelper.login(this@Login, body.idUser, body.token_login, body.validasi, body.nama, body.identitas)) {
-                                    val intent = if (body.validasi == "2") {
-                                        Intent(this@Login, Checkpoint::class.java)
-                                    } else {
-                                        Intent(this@Login, MainActivity::class.java)
-                                    }
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    startActivity(intent)
-                                    finish()
-                                }
-                            }
-                        } else {
-                            tampilPesan(ErrorHelper.parseError(response).message)
-                        }
+        viewModel.loginState.observe(this) { resource ->
+            when (resource) {
+                is Resource.Loading -> showLoading()
+                is Resource.Success -> {
+                    hideLoading()
+                    val body = resource.data
+                    SessionHelper.login(this, body.idUser, body.token_login, body.validasi, body.nama, body.identitas)
+                    val intent = if (body.validasi == "2") {
+                        Intent(this, Checkpoint::class.java)
+                    } else {
+                        Intent(this, MainActivity::class.java)
                     }
-                    override fun onFailure(call: Call<LoginModel>, t: Throwable) {
-                        hideLoading()
-                        tampilPesan(t.message ?: "")
-                    }
-                })
-        } catch (e: Exception) {
-            hideLoading()
-            e.printStackTrace()
-            tampilPesan(e.message ?: "")
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    finish()
+                }
+                is Resource.Error -> {
+                    hideLoading()
+                    showToast(resource.message)
+                }
+            }
         }
     }
 
@@ -96,10 +82,7 @@ class Login : AppCompatActivity() {
         txtPassword = findViewById(R.id.ed_password)
     }
 
-    private fun tampilLoading() { if (!progressDialog.isShowing) progressDialog.show() }
+    private fun showLoading() { if (!progressDialog.isShowing) progressDialog.show() }
     private fun hideLoading() { if (progressDialog.isShowing) progressDialog.dismiss() }
-
-    private fun tampilPesan(pesan: String) {
-        Toast.makeText(applicationContext, pesan, Toast.LENGTH_LONG).show()
-    }
+    private fun showToast(msg: String) { Toast.makeText(applicationContext, msg, Toast.LENGTH_LONG).show() }
 }

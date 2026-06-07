@@ -2,19 +2,16 @@ package com.berkatfaatulohalawa1711010164.facevoting.ui
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.berkatfaatulohalawa1711010164.facevoting.api.APIService
-import com.berkatfaatulohalawa1711010164.facevoting.api.NoConnectivityException
 import com.berkatfaatulohalawa1711010164.facevoting.R
 import com.berkatfaatulohalawa1711010164.facevoting.adapter.PaslonAdapter
-import com.berkatfaatulohalawa1711010164.facevoting.response.GetPaslon
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.berkatfaatulohalawa1711010164.facevoting.core.Resource
+import com.berkatfaatulohalawa1711010164.facevoting.viewmodel.VoteViewModel
 
 class Paslon : AppCompatActivity() {
     private lateinit var gridView: RecyclerView
@@ -22,18 +19,34 @@ class Paslon : AppCompatActivity() {
     private lateinit var progressDialog: AlertDialog
     private lateinit var toolbar: Toolbar
 
+    private val viewModel: VoteViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_paslon)
         init()
         setSupportActionBar(toolbar)
         setupRecyclerView()
-        val idKategori = intent.extras?.getString("id_kategori", "0") ?: "0"
-        getPaslon(idKategori)
         supportActionBar?.apply {
             title = "Daftar Paslon"
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowTitleEnabled(true)
+        }
+        val idKategori = intent.extras?.getString("id_kategori", "0") ?: "0"
+        viewModel.loadPaslon(idKategori)
+
+        viewModel.paslonState.observe(this) { resource ->
+            when (resource) {
+                is Resource.Loading -> { /* dialog already shown */ }
+                is Resource.Success -> {
+                    progressDialog.dismiss()
+                    resource.data.listPaslon?.let { paslonAdapter.replaceData(it) }
+                }
+                is Resource.Error -> {
+                    progressDialog.dismiss()
+                    Toast.makeText(applicationContext, resource.message, Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
 
@@ -51,31 +64,5 @@ class Paslon : AppCompatActivity() {
         paslonAdapter = PaslonAdapter(applicationContext, mutableListOf())
         gridView.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         gridView.adapter = paslonAdapter
-    }
-
-    private fun getPaslon(kategori: String) {
-        try {
-            APIService.create(applicationContext).postPaslon(kategori)
-                .enqueue(object : Callback<GetPaslon> {
-                    override fun onResponse(call: Call<GetPaslon>, response: Response<GetPaslon>) {
-                        progressDialog.dismiss()
-                        if (response.isSuccessful) {
-                            response.body()?.listPaslon?.let { paslonAdapter.replaceData(it) }
-                        }
-                    }
-                    override fun onFailure(call: Call<GetPaslon>, t: Throwable) {
-                        progressDialog.dismiss()
-                        if (t is NoConnectivityException) displayExceptionMessage("Offline, cek koneksi internet anda!")
-                    }
-                })
-        } catch (e: Exception) {
-            progressDialog.dismiss()
-            e.printStackTrace()
-            displayExceptionMessage(e.message ?: "")
-        }
-    }
-
-    private fun displayExceptionMessage(msg: String) {
-        Toast.makeText(applicationContext, msg, Toast.LENGTH_LONG).show()
     }
 }
